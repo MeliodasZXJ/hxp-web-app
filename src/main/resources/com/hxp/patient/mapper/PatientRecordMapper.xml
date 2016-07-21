@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hxp.patient.po.PatientRecord" >
+  <resultMap id="BaseResultMap" type="com.hxp.patient.po.PatientRecord" >
+    <id column="session_id" property="sessionId" jdbcType="VARCHAR" />
+    <result column="patient_id" property="patientId" jdbcType="BIGINT" />
+    <result column="sex" property="sex" jdbcType="INTEGER" />
+    <result column="birthday" property="birthday" jdbcType="DATE" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="content" property="content" jdbcType="VARCHAR" />
+    <result column="type" property="type" jdbcType="INTEGER" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="end_time" property="endTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <resultMap id="ResultMap" type="com.hxp.patient.dto.PatientRecordDto" >
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="sex" property="sex" jdbcType="VARCHAR" />
+    <result column="age" property="age" jdbcType="VARCHAR" />
+    <result column="content" property="content" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="VARCHAR" />
+    <result column="head_path" property="headImg" jdbcType="VARCHAR" />
+    
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    session_id, patient_id, sex, birthday, name,content, type, status, create_time, end_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from patient_record
+    where session_id = #{sessionId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from patient_record
+    where session_id = #{sessionId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insertPatientRecord" parameterType="com.hxp.patient.po.PatientRecord" >
+    insert into patient_record (session_id, patient_id, name,
+    sex, birthday, content,
+    type, status, create_time,
+    end_time)
+    values (#{sessionId,jdbcType=VARCHAR}, #{patientId,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR},
+    #{sex,jdbcType=INTEGER}, #{birthday,jdbcType=DATE}, #{content,jdbcType=VARCHAR},
+    #{type,jdbcType=INTEGER}, #{status,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP},
+    #{endTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.hxp.patient.po.PatientRecord" >
+    insert into patient_record
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="sessionId != null" >
+        session_id,
+      </if>
+      <if test="patientId != null" >
+        patient_id,
+      </if>
+      <if test="sex != null" >
+        sex,
+      </if>
+      <if test="birthday != null" >
+        birthday,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="content != null" >
+        content,
+      </if>
+      <if test="type != null" >
+        type,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="endTime != null" >
+        end_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="sessionId != null" >
+        #{sessionId,jdbcType=VARCHAR},
+      </if>
+      <if test="patientId != null" >
+        #{patientId,jdbcType=BIGINT},
+      </if>
+      <if test="sex != null" >
+        #{sex,jdbcType=INTEGER},
+      </if>
+      <if test="birthday != null" >
+        #{birthday,jdbcType=DATE},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null" >
+        #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endTime != null" >
+        #{endTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+
+  <update id="updateByPrimaryKeySelective" parameterType="com.hxp.patient.po.PatientRecord" >
+    update patient_record
+    <set >
+      <if test="patientId != null" >
+        patient_id = #{patientId,jdbcType=BIGINT},
+      </if>
+      <if test="sex != null" >
+        sex = #{sex,jdbcType=INTEGER},
+      </if>
+      <if test="birthday != null" >
+        birthday = #{birthday,jdbcType=DATE},
+      </if>
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null" >
+        content = #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endTime != null" >
+        end_time = #{endTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where session_id = #{sessionId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hxp.patient.po.PatientRecord" >
+    update patient_record
+    set patient_id = #{patientId,jdbcType=BIGINT},
+      sex = #{sex,jdbcType=INTEGER},
+      birthday = #{birthday,jdbcType=DATE},
+      name = #{name,jdbcType=VARCHAR},
+      content = #{content,jdbcType=VARCHAR},
+      type = #{type,jdbcType=INTEGER},
+      status = #{status,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      end_time = #{endTime,jdbcType=TIMESTAMP}
+    where session_id = #{sessionId,jdbcType=VARCHAR}
+  </update>
+  
+    <update id="updateStatusByPrimaryKey" parameterType="com.hxp.patient.po.PatientRecord" >
+    update patient_record
+    set 
+      status = #{status,jdbcType=INTEGER}
+    where session_id = #{sessionId,jdbcType=VARCHAR}
+  </update>
+
+  <select id="find" resultMap="BaseResultMap" parameterType="com.hxp.patient.po.PatientRecord" >
+    select
+    <include refid="Base_Column_List" />
+    from patient_record 
+    where
+    patient_id = #{patientId,jdbcType=BIGINT}
+     order by status asc,create_time desc
+  </select>
+  
+    <!-- 查询会诊中心 -->
+  <select id="findNewPatientRecord" resultMap="ResultMap"  parameterType="com.hxp.patient.po.PatientRecord">
+    select r.`name`,
+	CASE when r.sex=0 THEN '女' ELSE '男' end as 'sex',
+	 (YEAR(CURDATE())-YEAR(r.birthday))-(RIGHT(CURDATE(),5)) as age,
+	r.content,
+	r.create_time,
+	c,head_path,
+   	case 
+	when r.`status`=0 THEN '提交问题'
+	when r.`status`=1 THEN '抢答完成'
+	when r.`status`=2 THEN '聊天结束'
+	when r.`status`=3 THEN '评论完成'
+	end as 'status'
+  from patient_record r 
+  INNER JOIN patient_customer c on r.patient_id=c.id
+	where
+  not EXISTS(select 1 from patient_doctor_seesion_ref se where se.patient_id=r.patient_id)
+	order by r.status,r.create_time desc
+  </select>
+  
+  
+  <!-- 查询我的会诊 -->
+   <select id="findMyPatientRecord" resultMap="ResultMap"  parameterType="java.lang.Long">
+	    SELECT
+	r.`name`,CASE when r.sex=0 THEN '女' ELSE '男' end as 'sex',
+		 (YEAR(CURDATE())-YEAR(r.birthday))-(RIGHT(CURDATE(),5)) as age,
+	r.create_time,
+		case 
+		when r.`status`=0 THEN '提交问题'
+		when r.`status`=1 THEN '抢答完成'
+		when r.`status`=2 THEN '聊天结束'
+		when r.`status`=3 THEN '评论完成'
+		end as 'status',
+	r.content,
+	sr.patient_id,
+	sr.session_id,
+	sr.doc_id,
+	c.head_path
+	FROM
+	patient_doctor_seesion_ref sr
+	inner JOIN patient_record r ON sr.patient_id = r.patient_id 
+	inner join patient_customer c on c.id=r.patient_id
+	AND sr.doc_id = #{doctorId,jdbcType=BIGINT} order by r.status,r.create_time desc
+  </select>
+
+    <select id="findPatientRecord" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    select
+    <include refid="Base_Column_List" />
+    from patient_record
+    where session_id
+    <!-- type 1 查询  最新提问的数据 -->
+     <if test="type==1" >
+			not  in
+     </if>
+     <!-- 查询我的会诊 -->
+      <if test="type==2" >
+			in
+     </if>
+    (
+			SELECT session_id FROM  patient_doctor_seesion_ref WHERE doc_id = #{doctorId,jdbcType=BIGINT}
+	) 
+    
+  	</select>
+  
+   <select id="getPatientRecordById" resultMap="BaseResultMap" parameterType="com.hxp.patient.po.PatientRecord" >
+    select
+    <include refid="Base_Column_List" />
+    from patient_record
+    where
+    session_id = #{sessionId,jdbcType=VARCHAR}
+  </select>
+  
+</mapper>

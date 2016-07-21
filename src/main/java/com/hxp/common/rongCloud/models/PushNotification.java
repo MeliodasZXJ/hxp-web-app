@@ -1,0 +1,35 @@
+package com.hxp.common.rongCloud.models;
+
+
+import java.io.Serializable;
+
+public class PushNotification implements Serializable {
+	private String alert;
+	private PlatformNotification ios;
+	private PlatformNotification android;
+
+	public String getAlert() {
+		return alert;
+	}
+
+	public void setAlert(String alert) {
+		this.alert = alert;
+	}
+
+	public PlatformNotification getIos() {
+		return ios;
+	}
+
+	public void setIos(PlatformNotification ios) {
+		this.ios = ios;
+	}
+
+	public PlatformNotification getAndroid() {
+		return android;
+	}
+
+	public void setAndroid(PlatformNotification android) {
+		this.android = android;
+	}
+
+}

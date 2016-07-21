@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hxp.patient.po.PatientDoctorRel" >
+  <resultMap id="BaseResultMap" type="com.hxp.patient.po.PatientDoctorRel" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="session_id" property="sessionId" jdbcType="VARCHAR" />
+    <result column="patient_id" property="patientId" jdbcType="BIGINT" />
+    <result column="doc_id" property="docId" jdbcType="BIGINT" />
+    <result column="access" property="access" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, session_id, patient_id, doc_id, access, create_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from patient_doctor_seesion_ref
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from patient_doctor_seesion_ref
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insertPatientDoctorRel" parameterType="com.hxp.patient.po.PatientDoctorRel" >
+    insert into patient_doctor_seesion_ref ( session_id, patient_id, 
+      doc_id, access, create_time
+      )
+    values (#{sessionId,jdbcType=VARCHAR}, #{patientId,jdbcType=BIGINT},
+      #{docId,jdbcType=BIGINT}, #{access,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.hxp.patient.po.PatientDoctorRel" >
+    insert into patient_doctor_seesion_ref
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="sessionId != null" >
+        session_id,
+      </if>
+      <if test="patientId != null" >
+        patient_id,
+      </if>
+      <if test="docId != null" >
+        doc_id,
+      </if>
+      <if test="access != null" >
+        access,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="sessionId != null" >
+        #{sessionId,jdbcType=BIGINT},
+      </if>
+      <if test="patientId != null" >
+        #{patientId,jdbcType=BIGINT},
+      </if>
+      <if test="docId != null" >
+        #{docId,jdbcType=BIGINT},
+      </if>
+      <if test="access != null" >
+        #{access,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hxp.patient.po.PatientDoctorRel" >
+    update patient_doctor_seesion_ref
+    <set >
+      <if test="sessionId != null" >
+        session_id = #{sessionId,jdbcType=VARCHAR},
+      </if>
+      <if test="patientId != null" >
+        patient_id = #{patientId,jdbcType=BIGINT},
+      </if>
+      <if test="docId != null" >
+        doc_id = #{docId,jdbcType=BIGINT},
+      </if>
+      <if test="access != null" >
+        access = #{access,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updatePatientDoctorRel" parameterType="com.hxp.patient.po.PatientDoctorRel" >
+    update patient_doctor_seesion_ref
+    set access = #{access,jdbcType=VARCHAR}
+    where session_id = #{sessionId,jdbcType=VARCHAR}
+     AND patient_id = #{patientId,jdbcType=BIGINT}
+     AND doc_id = #{docId,jdbcType=BIGINT}
+  </update>
+
+  <select id="find" resultMap="BaseResultMap" parameterType="com.hxp.patient.po.PatientDoctorRel" >
+    select
+    <include refid="Base_Column_List" />
+    from patient_doctor_seesion_ref
+    where session_id = #{sessionId,jdbcType=VARCHAR}
+     AND patient_id = #{patientId,jdbcType=BIGINT}
+  </select>
+</mapper>

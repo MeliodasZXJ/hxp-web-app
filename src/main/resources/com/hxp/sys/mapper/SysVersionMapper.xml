@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hxp.sys.po.SysVersion" >
+  <resultMap id="BaseResultMap" type="com.hxp.sys.po.SysVersion" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="client_type" property="clientType" jdbcType="INTEGER" />
+    <result column="pf_type" property="pfType" jdbcType="INTEGER" />
+    <result column="version" property="version" jdbcType="VARCHAR" />
+    <result column="url" property="url" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="forceUpdate" property="forceupdate" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, client_type, pf_type, version, url, status, create_time, forceUpdate
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from sys_version
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from sys_version
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.hxp.sys.po.SysVersion" >
+    insert into sys_version (id, client_type, pf_type, 
+      version, url, status, 
+      create_time, forceUpdate)
+    values (#{id,jdbcType=INTEGER}, #{clientType,jdbcType=INTEGER}, #{pfType,jdbcType=INTEGER}, 
+      #{version,jdbcType=VARCHAR}, #{url,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{forceupdate,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.hxp.sys.po.SysVersion" >
+    insert into sys_version
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="clientType != null" >
+        client_type,
+      </if>
+      <if test="pfType != null" >
+        pf_type,
+      </if>
+      <if test="version != null" >
+        version,
+      </if>
+      <if test="url != null" >
+        url,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="forceupdate != null" >
+        forceUpdate,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="clientType != null" >
+        #{clientType,jdbcType=INTEGER},
+      </if>
+      <if test="pfType != null" >
+        #{pfType,jdbcType=INTEGER},
+      </if>
+      <if test="version != null" >
+        #{version,jdbcType=VARCHAR},
+      </if>
+      <if test="url != null" >
+        #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="forceupdate != null" >
+        #{forceupdate,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hxp.sys.po.SysVersion" >
+    update sys_version
+    <set >
+      <if test="clientType != null" >
+        client_type = #{clientType,jdbcType=INTEGER},
+      </if>
+      <if test="pfType != null" >
+        pf_type = #{pfType,jdbcType=INTEGER},
+      </if>
+      <if test="version != null" >
+        version = #{version,jdbcType=VARCHAR},
+      </if>
+      <if test="url != null" >
+        url = #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="forceupdate != null" >
+        forceUpdate = #{forceupdate,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hxp.sys.po.SysVersion" >
+    update sys_version
+    set client_type = #{clientType,jdbcType=INTEGER},
+      pf_type = #{pfType,jdbcType=INTEGER},
+      version = #{version,jdbcType=VARCHAR},
+      url = #{url,jdbcType=VARCHAR},
+      status = #{status,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      forceUpdate = #{forceupdate,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+   <select id="selectSysVersion" resultMap="BaseResultMap" parameterType="com.hxp.sys.po.SysVersion" >
+    select 
+    <include refid="Base_Column_List" />
+    from sys_version v
+    where 
+    v.client_type =#{clientType,jdbcType=INTEGER}
+     and  v.pf_type = #{pfType,jdbcType=INTEGER}
+   and  v.status !=-1
+  </select>
+</mapper>

@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hxp.sys.po.CommonInfomation" >
+  <resultMap id="BaseResultMap" type="com.hxp.sys.po.CommonInfomation" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="read_num" property="readNum" jdbcType="INTEGER" />
+    <result column="oper_id" property="operId" jdbcType="VARCHAR" />
+    <result column="content_type" property="contentType" jdbcType="INTEGER" />
+    <result column="source" property="source" jdbcType="VARCHAR" />
+    <result column="author" property="author" jdbcType="VARCHAR" />
+    <result column="from_type" property="fromType" jdbcType="VARCHAR" />
+    <result column="icon" property="icon" jdbcType="VARCHAR" />
+    <result column="url" property="url" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="content" property="content" jdbcType="LONGVARCHAR" />
+    <result column="intro" property="intro" jdbcType="LONGVARCHAR" />
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+    id, read_num, oper_id, content_type, source, author, from_type, icon, url, status, 
+    create_time, content, intro
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from common_infomation
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from common_infomation
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.hxp.sys.po.CommonInfomation" >
+    insert into common_infomation (id, read_num, oper_id, 
+      content_type, source, author, 
+      from_type, icon, url, 
+      status, create_time, content, 
+      intro)
+    values (#{id,jdbcType=BIGINT}, #{readNum,jdbcType=INTEGER}, #{operId,jdbcType=VARCHAR}, 
+      #{contentType,jdbcType=INTEGER}, #{source,jdbcType=VARCHAR}, #{author,jdbcType=VARCHAR}, 
+      #{fromType,jdbcType=VARCHAR}, #{icon,jdbcType=VARCHAR}, #{url,jdbcType=VARCHAR}, 
+      #{status,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{content,jdbcType=LONGVARCHAR}, 
+      #{intro,jdbcType=LONGVARCHAR})
+  </insert>
+  
+  <update id="updateByPrimaryKeySelective" parameterType="com.hxp.sys.po.CommonInfomation" >
+    update common_infomation
+    <set >
+      <if test="readNum != null" >
+        read_num = #{readNum,jdbcType=INTEGER},
+      </if>
+      <if test="operId != null" >
+        oper_id = #{operId,jdbcType=VARCHAR},
+      </if>
+      <if test="contentType != null" >
+        content_type = #{contentType,jdbcType=INTEGER},
+      </if>
+      <if test="source != null" >
+        source = #{source,jdbcType=VARCHAR},
+      </if>
+      <if test="author != null" >
+        author = #{author,jdbcType=VARCHAR},
+      </if>
+      <if test="fromType != null" >
+        from_type = #{fromType,jdbcType=VARCHAR},
+      </if>
+      <if test="icon != null" >
+        icon = #{icon,jdbcType=VARCHAR},
+      </if>
+      <if test="url != null" >
+        url = #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="content != null" >
+        content = #{content,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="intro != null" >
+        intro = #{intro,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hxp.sys.po.CommonInfomation" >
+    update common_infomation
+    set read_num = #{readNum,jdbcType=INTEGER},
+      oper_id = #{operId,jdbcType=VARCHAR},
+      content_type = #{contentType,jdbcType=INTEGER},
+      source = #{source,jdbcType=VARCHAR},
+      author = #{author,jdbcType=VARCHAR},
+      from_type = #{fromType,jdbcType=VARCHAR},
+      icon = #{icon,jdbcType=VARCHAR},
+      url = #{url,jdbcType=VARCHAR},
+      status = #{status,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

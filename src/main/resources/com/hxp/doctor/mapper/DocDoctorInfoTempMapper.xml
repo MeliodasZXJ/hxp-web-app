@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hxp.doctor.po.DocDoctorInfoTemp">
+	<resultMap id="BaseResultMap" type="com.hxp.doctor.po.DocDoctorInfoTemp">
+		<id column="id" property="id" jdbcType="BIGINT" />
+		<result column="doc_id" property="docId" jdbcType="BIGINT" />
+		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="sex" property="sex" jdbcType="INTEGER" />
+		<result column="hospital_id" property="hospitalId" jdbcType="INTEGER" />
+		<result column="dept_id" property="deptId" jdbcType="INTEGER" />
+		<result column="dept_tel" property="deptTel" jdbcType="VARCHAR" />
+		<result column="type" property="type" jdbcType="INTEGER" />
+		<result column="intro" property="intro" jdbcType="VARCHAR" />
+		<result column="head_path" property="headPath" jdbcType="VARCHAR" />
+		<result column="pid_path" property="pidPath" jdbcType="VARCHAR" />
+		<result column="territory" property="territory" jdbcType="VARCHAR" />
+		<result column="status" property="status" jdbcType="INTEGER" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+	</resultMap>
+	
+	<sql id="Base_Column_List">
+		id, doc_id, name, sex,
+		hospital_id,
+		dept_id, dept_tel,
+		type, intro, head_path, pid_path,territory,
+		status, create_time
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Long">
+		select
+		<include refid="Base_Column_List" />
+		from doc_doctor_info_temp
+		where id = #{id,jdbcType=BIGINT}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+		delete from
+		doc_doctor_info_temp
+		where id = #{id,jdbcType=BIGINT}
+	</delete>
+	<insert id="insert" parameterType="com.hxp.doctor.po.DocDoctorInfoTemp">
+		insert into
+		doc_doctor_info_temp (doc_id, name,
+		sex, hospital_id, dept_id,
+		dept_tel, type, intro,
+		head_path,
+		pid_path, status)
+		values (#{docId,jdbcType=BIGINT},
+		#{name,jdbcType=VARCHAR},
+		#{sex,jdbcType=INTEGER},
+		#{hospitalId,jdbcType=BIGINT},
+		#{deptId,jdbcType=BIGINT},
+		#{deptTel,jdbcType=VARCHAR}, #{type,jdbcType=INTEGER},
+		#{intro,jdbcType=VARCHAR},
+		#{headPath,jdbcType=VARCHAR},
+		#{pidPath,jdbcType=VARCHAR},
+		#{territory,jdbcType=VARCHAR},
+		#{status,jdbcType=INTEGER})
+	</insert>
+
+	<update id="updateByPrimaryKeySelective" parameterType="com.hxp.doctor.po.DocDoctorInfoTemp">
+		update doc_doctor_info_temp
+		<set>
+			<if test="docId != null">
+				doc_id = #{docId,jdbcType=BIGINT},
+			</if>
+			<if test="name != null">
+				name = #{name,jdbcType=VARCHAR},
+			</if>
+			<if test="sex != null">
+				sex = #{sex,jdbcType=INTEGER},
+			</if>
+			<if test="hospitalId != null">
+				hospital_id = #{hospitalId,jdbcType=BIGINT},
+			</if>
+			<if test="deptId != null">
+				dept_id = #{deptId,jdbcType=BIGINT},
+			</if>
+			<if test="deptTel != null">
+				dept_tel = #{deptTel,jdbcType=VARCHAR},
+			</if>
+			<if test="type != null">
+				type = #{type,jdbcType=INTEGER},
+			</if>
+			<if test="intro != null">
+				intro = #{intro,jdbcType=VARCHAR},
+			</if>
+			<if test="headPath != null">
+				head_path = #{headPath,jdbcType=VARCHAR},
+			</if>
+			<if test="pidPath != null">
+				pid_path = #{pidPath,jdbcType=VARCHAR},
+			</if>
+			<if test="territory != null">
+				#{territory,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				status = #{status,jdbcType=INTEGER},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+		</set>
+		where id = #{id,jdbcType=BIGINT}
+	</update>
+
+
+	<!-- self start -->
+	<select id="find" resultType="com.hxp.doctor.dto.DocDoctorInfoTempDto" parameterType="com.hxp.doctor.dto.DocDoctorInfoTempDto">
+		SELECT 
+		  temp.`id`,
+		  temp.`name`,
+		  temp.`doc_id` AS docId,
+		  temp.`sex`,
+		  temp.`intro`,
+		  temp.`dept_id` AS deptId,
+		  dept.`name` AS deptName,
+		  temp.`hospital_id` AS hospitalId,
+		  hospital.`name` AS hospitalName,
+		  temp.`head_path` AS headPath,
+		  temp.`pid_path` AS pidPath,
+		  temp.`type`,
+		  dic.`name` AS careers,
+		  temp.`status`,
+		  temp.`territory`,
+		  temp.`create_time` AS createTime
+		FROM
+		  doc_doctor_info_temp temp 
+		  LEFT JOIN doc_department_info dept 
+		    ON temp.`dept_id` = dept.`id` 
+		  LEFT JOIN doc_doctor_hospital_info hospital 
+		    ON temp.`hospital_id` = hospital.id 
+		  LEFT JOIN sys_dic_info dic 
+		    ON temp.`type` = dic.`id`
+		  where 1=1
+		  <if test="name!=null and name!=''">
+		  	and temp.`name`  like concat(concat('%',#{name}), '%')
+		  </if> 
+		  <if test="hospitalName!=null and hospitalName!=''">
+		    and hospital.`name`   like concat(concat('%',#{hospitalName}), '%')
+		  </if> 
+		  <if test="deptName!=null and deptName!=''">
+		  	and dept.`name`  like concat(concat('%',#{deptName}), '%')
+		  </if> 
+		ORDER BY temp.`status`ASC , temp.`create_time` DESC
+	</select>
+
+	<!-- self end -->
+</mapper>

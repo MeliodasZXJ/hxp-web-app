@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hxp.sys.po.CommonVideoComment" >
+  <resultMap id="BaseResultMap" type="com.hxp.sys.po.CommonVideoComment" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="video_id" property="videoId" jdbcType="BIGINT" />
+    <result column="type" property="type" jdbcType="INTEGER" />
+    <result column="user_id" property="userId" jdbcType="BIGINT" />
+    <result column="content" property="content" jdbcType="VARCHAR" />
+    <result column="verify_user_id" property="verifyUserId" jdbcType="BIGINT" />
+    <result column="verify_info" property="verifyInfo" jdbcType="VARCHAR" />
+    <result column="verify_time" property="verifyTime" jdbcType="TIMESTAMP" />
+    <result column="reply_content" property="replyContent" jdbcType="VARCHAR" />
+    <result column="reply_time" property="replyTime" jdbcType="TIMESTAMP" />
+    <result column="reply_user_id" property="replyUserId" jdbcType="BIGINT" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, video_id, type, user_id, content, verify_user_id, verify_info, verify_time, reply_content, 
+    reply_time, reply_user_id, status, create_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from common_video_comment
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from common_video_comment
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.hxp.sys.po.CommonVideoComment" >
+    insert into common_video_comment (id, video_id, type, 
+      user_id, content, verify_user_id, 
+      verify_info, verify_time, reply_content, 
+      reply_time, reply_user_id, status, 
+      create_time)
+    values (#{id,jdbcType=BIGINT}, #{videoId,jdbcType=BIGINT}, #{type,jdbcType=INTEGER}, 
+      #{userId,jdbcType=BIGINT}, #{content,jdbcType=VARCHAR}, #{verifyUserId,jdbcType=BIGINT}, 
+      #{verifyInfo,jdbcType=VARCHAR}, #{verifyTime,jdbcType=TIMESTAMP}, #{replyContent,jdbcType=VARCHAR}, 
+      #{replyTime,jdbcType=TIMESTAMP}, #{replyUserId,jdbcType=BIGINT}, #{status,jdbcType=INTEGER}, 
+      #{createTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.hxp.sys.po.CommonVideoComment" >
+    insert into common_video_comment
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="videoId != null" >
+        video_id,
+      </if>
+      <if test="type != null" >
+        type,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="content != null" >
+        content,
+      </if>
+      <if test="verifyUserId != null" >
+        verify_user_id,
+      </if>
+      <if test="verifyInfo != null" >
+        verify_info,
+      </if>
+      <if test="verifyTime != null" >
+        verify_time,
+      </if>
+      <if test="replyContent != null" >
+        reply_content,
+      </if>
+      <if test="replyTime != null" >
+        reply_time,
+      </if>
+      <if test="replyUserId != null" >
+        reply_user_id,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="videoId != null" >
+        #{videoId,jdbcType=BIGINT},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="content != null" >
+        #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="verifyUserId != null" >
+        #{verifyUserId,jdbcType=BIGINT},
+      </if>
+      <if test="verifyInfo != null" >
+        #{verifyInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="verifyTime != null" >
+        #{verifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="replyContent != null" >
+        #{replyContent,jdbcType=VARCHAR},
+      </if>
+      <if test="replyTime != null" >
+        #{replyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="replyUserId != null" >
+        #{replyUserId,jdbcType=BIGINT},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hxp.sys.po.CommonVideoComment" >
+    update common_video_comment
+    <set >
+      <if test="videoId != null" >
+        video_id = #{videoId,jdbcType=BIGINT},
+      </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="content != null" >
+        content = #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="verifyUserId != null" >
+        verify_user_id = #{verifyUserId,jdbcType=BIGINT},
+      </if>
+      <if test="verifyInfo != null" >
+        verify_info = #{verifyInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="verifyTime != null" >
+        verify_time = #{verifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="replyContent != null" >
+        reply_content = #{replyContent,jdbcType=VARCHAR},
+      </if>
+      <if test="replyTime != null" >
+        reply_time = #{replyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="replyUserId != null" >
+        reply_user_id = #{replyUserId,jdbcType=BIGINT},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hxp.sys.po.CommonVideoComment" >
+    update common_video_comment
+    set video_id = #{videoId,jdbcType=BIGINT},
+      type = #{type,jdbcType=INTEGER},
+      user_id = #{userId,jdbcType=BIGINT},
+      content = #{content,jdbcType=VARCHAR},
+      verify_user_id = #{verifyUserId,jdbcType=BIGINT},
+      verify_info = #{verifyInfo,jdbcType=VARCHAR},
+      verify_time = #{verifyTime,jdbcType=TIMESTAMP},
+      reply_content = #{replyContent,jdbcType=VARCHAR},
+      reply_time = #{replyTime,jdbcType=TIMESTAMP},
+      reply_user_id = #{replyUserId,jdbcType=BIGINT},
+      status = #{status,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

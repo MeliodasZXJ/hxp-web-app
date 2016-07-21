@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.1.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd"
+       default-lazy-init="true">
+
+	<!-- 配置自动扫描 开始 -->
+	<!-- 使用Annotation自动注册Bean，解决事务失效问题：在主容器中不扫描@Controller注解，在SpringMvc中只扫描@Controller注解。 -->
+	<context:component-scan base-package="com.hxp">
+        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+    </context:component-scan>
+    <!-- 配置自动扫描 结束 -->
+
+    <!-- 配置文件+数据源 开始 -->
+    <bean id="propertyConfigurer"
+          class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations">
+            <list>
+                <value>classpath:jdbc.properties</value>
+            </list>
+        </property>
+    </bean>
+
+
+    <!-- 数据库读写分离数据源配置 -->
+    <bean id="dataSource" class="com.hxp.common.framework.datasource.DynamicDataSource">
+        <property name="master" ref="master"/>
+        <property name="slaves">
+            <list>
+                <ref bean="slave01"/>
+            </list>
+        </property>
+    </bean>
+
+
+    <bean id="master" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
+        <property name="driverClassName">
+            <value>${master.mysql.jdbc.driver}</value>
+        </property>
+        <property name="url">
+            <value>${master.mysql.jdbc.url}</value>
+        </property>
+        <property name="username">
+            <value>${master.mysql.jdbc.user}</value>
+        </property>
+        <property name="password">
+            <value>${master.mysql.jdbc.pwd}</value>
+        </property>
+        <property name="initialSize" value="${master.mysql.druid.initialSize}"/>
+        <property name="minIdle" value="${master.mysql.druid.minIdle}"/>
+        <property name="maxActive" value="${master.mysql.druid.maxActive}"/>
+        <property name="maxWait" value="${master.mysql.druid.maxWait}"/>
+        <property name="timeBetweenEvictionRunsMillis" value="60000"/>
+        <property name="minEvictableIdleTimeMillis" value="300000"/>
+        <property name="validationQuery" value="SELECT 'x'"/>
+        <property name="testWhileIdle" value="true"/>
+        <property name="testOnBorrow" value="false"/>
+        <property name="testOnReturn" value="false"/>
+        <property name="filters" value="stat"/>
+    </bean>
+
+    <bean id="slave01" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
+        <property name="driverClassName">
+            <value>${slave.mysql.jdbc.driver}</value>
+        </property>
+        <property name="url">
+            <value>${slave.mysql.jdbc.url}</value>
+        </property>
+        <property name="username">
+            <value>${slave.mysql.jdbc.user}</value>
+        </property>
+        <property name="password">
+            <value>${slave.mysql.jdbc.pwd}</value>
+        </property>
+        <property name="initialSize" value="${slave.mysql.druid.initialSize}"/>
+        <property name="minIdle" value="${slave.mysql.druid.minIdle}"/>
+        <property name="maxActive" value="${slave.mysql.druid.maxActive}"/>
+        <property name="maxWait" value="${slave.mysql.druid.maxWait}"/>
+        <property name="timeBetweenEvictionRunsMillis" value="60000"/>
+        <property name="minEvictableIdleTimeMillis" value="300000"/>
+        <property name="validationQuery" value="SELECT 'x'"/>
+        <property name="testWhileIdle" value="true"/>
+        <property name="testOnBorrow" value="false"/>
+        <property name="testOnReturn" value="false"/>
+        <property name="filters" value="stat"/>
+    </bean>
+
+    <!--配置文件+数据源 结束 -->
+
+    <!-- 定义单个jdbc数据源的事务管理器 -->
+    <bean id="transactionManager" class="com.hxp.common.framework.datasource.DynamicDataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+    <!-- 以 @Transactional 标注来定义事务  -->
+    <tx:annotation-driven transaction-manager="transactionManager" proxy-target-class="true"/>
+
+
+    <!-- 配置事务的传播特性 -->
+    <tx:advice id="txAdvice" transaction-manager="transactionManager">
+        <tx:attributes>
+            <tx:method name="save*" propagation="REQUIRED" read-only="false" rollback-for="Exception"/>
+            <tx:method name="add*" propagation="REQUIRED" read-only="false" rollback-for="Exception"/>
+            <tx:method name="create*" propagation="REQUIRED" read-only="false" rollback-for="Exception"/>
+            <tx:method name="insert*" propagation="REQUIRED" read-only="false" rollback-for="Exception"/>
+            <tx:method name="del*" propagation="REQUIRED" read-only="false" rollback-for="Exception"/>
+            <tx:method name="update*" propagation="REQUIRED" read-only="false" rollback-for="Exception"/>
+            <tx:method name="modify*" propagation="REQUIRED" read-only="false" rollback-for="Exception"/>
+            <tx:method name="merge*" propagation="REQUIRED" read-only="false" rollback-for="Exception"/>
+            <tx:method name="remove*" propagation="REQUIRED" read-only="false" rollback-for="Exception"/>
+            <tx:method name="batch*" propagation="REQUIRED" read-only="false" rollback-for="Exception"/>
+            <tx:method name="proc*" propagation="REQUIRED" read-only="false" rollback-for="Exception"/>
+            <tx:method name="select*" read-only="true"/>
+            <tx:method name="query*" read-only="true"/>
+            <tx:method name="use*" read-only="true"/>
+            <tx:method name="get*" read-only="true"/>
+            <tx:method name="count*" read-only="true"/>
+            <tx:method name="find*" read-only="true"/>
+            <tx:method name="list*" read-only="true"/>
+            <tx:method name="*" read-only="false" />
+        </tx:attributes>
+    </tx:advice>
+
+
+    <!-- 那些类的哪些方法参与事务 -->
+    <aop:config>
+        <aop:pointcut id="allManagerMethod" expression="execution(* com.hxp..service.impl.*.*(..))"/>
+        <aop:advisor pointcut-ref="allManagerMethod" advice-ref="txAdvice"/>
+    </aop:config>
+    <!--   事务管理   End     -->
+
+    <!-- 配置MyBatis SessionFactory -->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="configLocation" value="classpath:mybatis-conf.xml"/>
+        <property name="mapperLocations" value="classpath:com/hxp/**/mapper/*.xml"></property>
+    </bean>
+
+
+    <bean id="sqlSessionTemplate" class="org.mybatis.spring.SqlSessionTemplate" scope="prototype">
+        <constructor-arg index="0" ref="sqlSessionFactory"/>
+        <constructor-arg index="1" value="REUSE"/>
+    </bean>
+
+    <bean id="dynamicSqlSessionTemplate" class="com.hxp.common.framework.datasource.DynamicSqlSessionTemplate"
+          scope="prototype">
+        <constructor-arg index="0" ref="sqlSessionTemplate"/>
+    </bean>
+
+
+</beans>
+    

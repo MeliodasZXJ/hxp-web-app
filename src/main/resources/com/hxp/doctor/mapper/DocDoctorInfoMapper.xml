@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hxp.doctor.po.DocDoctorInfo" >
+  <resultMap id="BaseResultMap" type="com.hxp.doctor.po.DocDoctorInfo" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="mobile" property="mobile" jdbcType="VARCHAR" />
+    <result column="password" property="password" jdbcType="VARCHAR" />
+    <result column="sex" property="sex" jdbcType="INTEGER" />
+    <result column="province_id" property="provinceId" jdbcType="INTEGER" />
+    <result column="city_id" property="cityId" jdbcType="INTEGER" />
+    <result column="region_id" property="regionId" jdbcType="INTEGER" />
+    <result column="hospital_id" property="hospitalId" jdbcType="BIGINT" />
+    <result column="dept_id" property="deptId" jdbcType="BIGINT" />
+    <result column="dept_tel" property="deptTel" jdbcType="VARCHAR" />
+    <result column="type" property="type" jdbcType="INTEGER" />
+    <result column="intro" property="intro" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="invite_code" property="inviteCode" jdbcType="VARCHAR" />
+    <result column="head_path" property="headPath" jdbcType="VARCHAR" />
+    <result column="pid_path" property="pidPath" jdbcType="VARCHAR" />
+    <result column="territory" property="territory" jdbcType="VARCHAR" />
+    <result column="doctor_type" property="doctorType" jdbcType="INTEGER" />
+    <result column="sort" property="sort" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, name, mobile, password, sex, province_id, city_id, region_id, hospital_id, dept_id,
+    dept_tel, type, intro, status, create_time, invite_code, head_path, pid_path, territory,
+    doctor_type, sort
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select
+    <include refid="Base_Column_List" />
+    from doc_doctor_info
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from doc_doctor_info
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+ <insert id="insert" parameterType="com.hxp.doctor.po.DocDoctorInfo" >
+    insert into doc_doctor_info (name, mobile,
+    password, sex, province_id,
+    city_id, region_id, hospital_id,
+    dept_id, dept_tel, type,
+    intro, status, create_time,
+    invite_code, head_path, pid_path,
+    territory, doctor_type, sort
+    )
+    values (#{name,jdbcType=VARCHAR}, #{mobile,jdbcType=VARCHAR},
+    #{password,jdbcType=VARCHAR}, #{sex,jdbcType=INTEGER}, #{provinceId,jdbcType=INTEGER},
+    #{cityId,jdbcType=INTEGER}, #{regionId,jdbcType=INTEGER}, #{hospitalId,jdbcType=BIGINT},
+    #{deptId,jdbcType=BIGINT}, #{deptTel,jdbcType=VARCHAR}, #{type,jdbcType=INTEGER},
+    #{intro,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP},
+    #{inviteCode,jdbcType=VARCHAR}, #{headPath,jdbcType=VARCHAR}, #{pidPath,jdbcType=VARCHAR},
+    #{territory,jdbcType=VARCHAR}, #{doctorType,jdbcType=INTEGER}, #{sort,jdbcType=INTEGER}
+    )
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hxp.doctor.po.DocDoctorInfo" >
+    update doc_doctor_info
+    <set >
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="mobile != null" >
+        mobile = #{mobile,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null" >
+        password = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null" >
+        sex = #{sex,jdbcType=INTEGER},
+      </if>
+      <if test="provinceId != null" >
+        province_id = #{provinceId,jdbcType=INTEGER},
+      </if>
+      <if test="cityId != null" >
+        city_id = #{cityId,jdbcType=INTEGER},
+      </if>
+      <if test="regionId != null" >
+        region_id = #{regionId,jdbcType=INTEGER},
+      </if>
+      <if test="hospitalId != null" >
+        hospital_id = #{hospitalId,jdbcType=BIGINT},
+      </if>
+      <if test="deptId != null" >
+        dept_id = #{deptId,jdbcType=BIGINT},
+      </if>
+      <if test="deptTel != null" >
+        dept_tel = #{deptTel,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=INTEGER},
+      </if>
+      <if test="intro != null" >
+        intro = #{intro,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="inviteCode != null" >
+        invite_code = #{inviteCode,jdbcType=VARCHAR},
+      </if>
+      <if test="headPath != null" >
+        head_path = #{headPath,jdbcType=VARCHAR},
+      </if>
+      <if test="pidPath != null" >
+        pid_path = #{pidPath,jdbcType=VARCHAR},
+      </if>
+      <if test="territory != null" >
+        territory = #{territory,jdbcType=VARCHAR},
+      </if>
+      <if test="doctorType != null" >
+        doctor_type = #{doctorType,jdbcType=INTEGER},
+      </if>
+      <if test="sort != null" >
+        sort = #{sort,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+ 
+  <select id="getByDocDoctorInfo" resultMap="BaseResultMap" parameterType="com.hxp.doctor.po.DocDoctorInfo" >
+    select
+    <include refid="Base_Column_List" />
+    from doc_doctor_info
+    where
+    mobile = #{mobile,jdbcType=VARCHAR}
+    AND password = #{password,jdbcType=VARCHAR}
+  </select>
+
+  <select id="getDocDoctorInfoByMobile" resultMap="BaseResultMap" parameterType="com.hxp.doctor.po.DocDoctorInfo" >
+    select
+    <include refid="Base_Column_List" />
+    from doc_doctor_info
+    where
+    mobile = #{mobile,jdbcType=VARCHAR}
+  </select>
+
+  <update id="updateByResetPassword" parameterType="com.hxp.doctor.po.DocDoctorInfo">
+    UPDATE doc_doctor_info
+    <set>
+      <if test="password != null" >
+        password = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="deptTel != null" >
+        dept_tel = #{deptTel,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="pidPath != null" >
+        pid_path = #{pidPath,jdbcType=VARCHAR}
+      </if>
+    </set>
+    where mobile = #{mobile,jdbcType=VARCHAR}
+  </update>
+	<!-- self start -->
+	<select id="find" resultType="com.hxp.doctor.dto.DocDoctorInfoDto" parameterType="com.hxp.doctor.dto.DocDoctorInfoDto">
+		SELECT 
+		  info.`id`,
+		  info.`name`,
+		  info.`sex`,
+		  info.`intro`,
+		  info.`dept_id` AS deptId,
+		  dept.`name` AS deptName,
+		  info.`hospital_id` AS hospitalId,
+		  hospital.`name` AS hospitalName,
+		  info.`head_path` AS headPath,
+		  info.`pid_path` AS pidPath,
+		  info.`type`,
+		  dic.`name` AS careers,
+		  info.`status`,
+		  info.`territory`,
+		  info.`create_time` AS createTime
+		FROM
+		  doc_doctor_info info 
+		  LEFT JOIN doc_department_info dept 
+		    ON info.`dept_id` = dept.`id` 
+		  LEFT JOIN doc_doctor_hospital_info hospital 
+		    ON info.`hospital_id` = hospital.id 
+		  LEFT JOIN sys_dic_info dic 
+		    ON info.`type` = dic.`id`
+		    <!-- 1,4 查询出认证通过与重新认证的数据 -->
+		  where info.status in (1,4)
+		  <if test="name!=null and name!=''">
+		  	and info.`name`  like concat(concat('%',#{name}), '%')
+		  </if> 
+		  <if test="hospitalName!=null and hospitalName!=''">
+		    and hospital.`name`   like concat(concat('%',#{hospitalName}), '%')
+		  </if> 
+		  <if test="deptName!=null and deptName!=''">
+		  	and dept.`name`  like concat(concat('%',#{deptName}), '%')
+		  </if> 
+		  <if test="doctor_type==1">
+		  	and info.doctor_type = 1
+		  </if>
+		ORDER BY info.`status`ASC , info.`create_time` DESC
+	</select>
+
+	<!-- self end -->
+	
+	 <select id="getByDocMobile" resultMap="BaseResultMap" parameterType="com.hxp.doctor.po.DocDoctorInfo" >
+    select
+    <include refid="Base_Column_List" />
+    from doc_doctor_info
+    where  mobile = #{mobile,jdbcType=VARCHAR}
+  </select>
+
+
+  <select id="getDoctorByMobileAndPass" parameterType="com.hxp.doctor.po.DocDoctorInfo" resultType="com.hxp.doctor.dto.DoctorDto">
+        SELECT
+      doctor.`id` AS doctorId,
+      -- 医生ID
+      doctor.`uuid` AS doctorUUID,
+      doctor.state AS status,
+      -- 冗余ID
+      doctor.`pid_path` AS pidPath,
+      -- 胸牌地址
+      doctor.`name` AS doctorName,
+      -- 医生姓名
+      doctor.`head_path` AS headPath,
+      -- 头像地址
+      doctor.`dept_tel` AS deptTel,
+      -- 科室电话
+      doctor.`sex` AS sex,
+      -- 性别
+      doctor.`territory` AS territory,
+      -- 擅长
+      doctor.`intro` AS intro,
+      -- 简介
+      hos.`name` AS hospitalName,
+      -- 医院名称
+      dept.`name` deptName,
+      -- 科室名称
+      dic.`value` professional,
+      -- 医生职称
+      city.`name` AS cityName,
+      region.`name` AS regionName,
+      province.`name` AS provinceName
+    FROM
+      `doc_doctor_info` doctor
+      LEFT JOIN `doc_doctor_hospital_info` hos
+        ON doctor.`hospital_id` = hos.`id`
+      LEFT JOIN `doc_department_info` dept
+        ON doctor.`dept_id` = dept.`id`
+      LEFT JOIN `sys_dic` dic
+        ON doctor.`type` = dic.`code`
+      LEFT JOIN `sys_region` city
+        ON hos.`city_id` = city.`id`
+      LEFT JOIN `sys_region` region
+        ON hos.`region_id` = region.`id`
+      LEFT JOIN `sys_region` province
+        ON hos.`province_id` = province.`id`
+        where
+        mobile = #{mobile,jdbcType=VARCHAR}
+        <if test="password !=null">
+             AND password = #{password,jdbcType=VARCHAR}
+        </if>
+   
+  </select>
+
+
+
+	  
+</mapper>

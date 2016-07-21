@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hxp.sys.po.RcloudChatLog" >
+  <resultMap id="BaseResultMap" type="com.hxp.sys.po.RcloudChatLog" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="fromUserId" property="fromuserid" jdbcType="BIGINT" />
+    <result column="toUserId" property="touserid" jdbcType="BIGINT" />
+    <result column="objectName" property="objectname" jdbcType="BIGINT" />
+    <result column="content" property="content" jdbcType="VARCHAR" />
+    <result column="timestamp" property="timestamp" jdbcType="VARCHAR" />
+    <result column="channelType" property="channeltype" jdbcType="BIGINT" />
+    <result column="msgUID" property="msguid" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, fromUserId, toUserId, objectName, content, timestamp, channelType, msgUID
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select
+    <include refid="Base_Column_List" />
+    from rcloud_chat_log
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from rcloud_chat_log
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insertRcloudChatLog" parameterType="com.hxp.sys.po.RcloudChatLog" >
+    insert into rcloud_chat_log (id, fromUserId, toUserId,
+    objectName, content, timestamp,
+    channelType, msgUID)
+    values (#{id,jdbcType=BIGINT}, #{fromuserid,jdbcType=BIGINT}, #{touserid,jdbcType=BIGINT},
+    #{objectname,jdbcType=BIGINT}, #{content,jdbcType=VARCHAR}, #{timestamp,jdbcType=VARCHAR},
+    #{channeltype,jdbcType=BIGINT}, #{msguid,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.hxp.sys.po.RcloudChatLog" >
+    insert into rcloud_chat_log
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="fromuserid != null" >
+        fromUserId,
+      </if>
+      <if test="touserid != null" >
+        toUserId,
+      </if>
+      <if test="objectname != null" >
+        objectName,
+      </if>
+      <if test="content != null" >
+        content,
+      </if>
+      <if test="timestamp != null" >
+        timestamp,
+      </if>
+      <if test="channeltype != null" >
+        channelType,
+      </if>
+      <if test="msguid != null" >
+        msgUID,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="fromuserid != null" >
+        #{fromuserid,jdbcType=BIGINT},
+      </if>
+      <if test="touserid != null" >
+        #{touserid,jdbcType=BIGINT},
+      </if>
+      <if test="objectname != null" >
+        #{objectname,jdbcType=BIGINT},
+      </if>
+      <if test="content != null" >
+        #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="timestamp != null" >
+        #{timestamp,jdbcType=VARCHAR},
+      </if>
+      <if test="channeltype != null" >
+        #{channeltype,jdbcType=BIGINT},
+      </if>
+      <if test="msguid != null" >
+        #{msguid,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+
+  <update id="updateByPrimaryKey" parameterType="com.hxp.sys.po.RcloudChatLog" >
+    update rcloud_chat_log
+    set fromUserId = #{fromuserid,jdbcType=BIGINT},
+      toUserId = #{touserid,jdbcType=BIGINT},
+      objectName = #{objectname,jdbcType=BIGINT},
+      content = #{content,jdbcType=VARCHAR},
+      timestamp = #{timestamp,jdbcType=VARCHAR},
+      channelType = #{channeltype,jdbcType=BIGINT},
+      msgUID = #{msguid,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

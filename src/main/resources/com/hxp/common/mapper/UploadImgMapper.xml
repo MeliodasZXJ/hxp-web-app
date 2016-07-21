@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hxp.common.fileUpload.po.UploadImg" >
+  <resultMap id="BaseResultMap" type="com.hxp.common.fileUpload.po.UploadImg" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="imgUrl" property="imgUrl" jdbcType="VARCHAR" />
+    <result column="thumbnaillId" property="thumbnaillId" jdbcType="VARCHAR" />
+    <result column="thumbnaillUrl" property="thumbnaillUrl" jdbcType="VARCHAR" />
+    <result column="suffix" property="suffix" jdbcType="VARCHAR" />
+    <result column="flag" property="flag" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, imgUrl, thumbnaillId, thumbnaillUrl, suffix,flag, create_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from upload_img
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from upload_img
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  
+  <insert id="insertUploadImg" parameterType="com.hxp.common.fileUpload.po.UploadImg" >
+    insert into upload_img (imgUrl, thumbnaillId, thumbnaillUrl, suffix,flag)
+    values (#{imgUrl,jdbcType=VARCHAR}, #{thumbnaillId,jdbcType=VARCHAR},
+	#{thumbnaillUrl,jdbcType=VARCHAR},
+    #{suffix,jdbcType=VARCHAR}, #{flag,jdbcType=INTEGER})
+  </insert>
+  
+  <insert id="insertSelective" parameterType="com.hxp.common.fileUpload.po.UploadImg" >
+    insert into upload_img
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="imgUrl != null" >
+        imgUrl,
+      </if>
+      <if test="thumbnaillId != null" >
+        thumbnaillId,
+      </if>
+      <if test="thumbnaillUrl != null" >
+        thumbnaillUrl,
+      </if>
+      <if test="suffix != null" >
+        suffix,
+      </if>
+      <if test="flag != null" >
+        flag,
+      </if>
+      <if test="create_time != null" >
+        create_time,
+      </if>
+    </trim>
+    
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="imgUrl != null" >
+       #{imgUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="thumbnaillId != null" >
+      #{thumbnaillId,jdbcType=VARCHAR},
+      </if>
+      <if test="thumbnaillUrl != null" >
+       #{thumbnaillUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="flag != null" >
+       #{flag,jdbcType=INTEGER},
+      </if>
+ 	<if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+
+
+
+
+  <select id="find" resultMap="BaseResultMap" parameterType="com.hxp.common.fileUpload.po.UploadImg" >
+    select
+    <include refid="Base_Column_List" />
+    from upload_img
+  </select>
+  
+   <select id="getUploadImgById" resultMap="BaseResultMap" parameterType="com.hxp.common.fileUpload.po.UploadImg" >
+    select
+    <include refid="Base_Column_List" />
+    from upload_img
+    where
+    id = #{id,jdbcType=BIGINT}
+  </select>
+  
+</mapper>

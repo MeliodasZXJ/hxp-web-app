@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hxp.commonality.po.CommonFeedBack">
+	<resultMap id="BaseResultMap" type="com.hxp.commonality.po.CommonFeedBack">
+		<id column="id" property="id" jdbcType="BIGINT" />
+		<result column="type" property="type" jdbcType="INTEGER" />
+		<result column="obj_id" property="objId" jdbcType="VARCHAR" />
+		<result column="content" property="content" jdbcType="VARCHAR" />
+		<result column="reply_user_id" property="replyUserId" jdbcType="VARCHAR" />
+		<result column="reply_content" property="replyContent"
+			jdbcType="VARCHAR" />
+		<result column="reply_time" property="replyTime" jdbcType="TIMESTAMP" />
+		<result column="status" property="status" jdbcType="INTEGER" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="mobile" property="mobile" jdbcType="VARCHAR" />
+		<association property="sysUser" column="reply_user_id"
+			select="com.hxp.sys.po.SysUser.selectByPrimaryKey" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, type, obj_id, content, reply_user_id, reply_content, reply_time,
+		status, create_time,
+		mobile
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Long">
+		select
+		<include refid="Base_Column_List" />
+		from common_feed_back
+		where id = #{id,jdbcType=BIGINT}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+		delete from common_feed_back
+		where id = #{id,jdbcType=BIGINT}
+	</delete>
+	<insert id="insert" parameterType="com.hxp.commonality.po.CommonFeedBack">
+		insert into common_feed_back (type, obj_id,
+		content, reply_user_id, reply_content,
+		reply_time, status, create_time,
+		mobile)
+		values ( #{type,jdbcType=INTEGER}, #{objId,jdbcType=VARCHAR},
+		#{content,jdbcType=VARCHAR}, #{replyUserId,jdbcType=VARCHAR},
+		#{replyContent,jdbcType=VARCHAR},
+		#{replyTime,jdbcType=TIMESTAMP}, #{status,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP},
+		#{mobile,jdbcType=VARCHAR})
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.hxp.commonality.po.CommonFeedBack">
+		update common_feed_back
+		<set>
+			<if test="type != null">
+				type = #{type,jdbcType=INTEGER},
+			</if>
+			<if test="objId != null">
+				obj_id = #{objId,jdbcType=VARCHAR},
+			</if>
+			<if test="content != null">
+				content = #{content,jdbcType=VARCHAR},
+			</if>
+			<if test="replyUserId != null">
+				reply_user_id = #{replyUserId,jdbcType=VARCHAR},
+			</if>
+			<if test="replyContent != null">
+				reply_content = #{replyContent,jdbcType=VARCHAR},
+			</if>
+			<if test="replyTime != null">
+				reply_time = #{replyTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="status != null">
+				status = #{status,jdbcType=INTEGER},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="mobile != null">
+				mobile = #{mobile,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where id = #{id,jdbcType=BIGINT}
+	</update>
+	<!-- self start -->
+	<select id="findDoctorFeedBackList" resultType="com.hxp.commonality.dto.CommonFeedBackDto"
+		parameterType="com.hxp.commonality.po.CommonFeedBack">
+		SELECT 
+		  fb.`id`,
+		  doc.`name` AS docName,
+		  doc.`sex`,
+		  fb.`mobile`,
+		  hospital.`name` AS hospitalName,
+		  dept.`name` AS deptName,
+		  su.`id` AS replySysUserId,
+		  su.`account_name` AS replySysUserName,
+		  fb.`create_time` AS createTime,
+		  fb.`reply_time` AS replyTime,
+		  fb.`content`,
+		  fb.`reply_content` AS replyContent,
+		  fb.status 
+		FROM
+		  `common_feed_back` fb 
+		  LEFT JOIN doc_doctor_info doc 
+		    ON fb.`obj_id` = doc.`id` 
+		  LEFT JOIN doc_doctor_hospital_info hospital 
+		    ON doc.`hospital_id` = hospital.`id` 
+		  LEFT JOIN doc_department_info dept 
+		    ON doc.`dept_id` = dept.`id` 
+		  LEFT JOIN sys_user su 
+		    ON fb.`reply_user_id` = su.`id` 
+		WHERE fb.`type` = 2 
+		<if test="status!=null">
+		AND fb.`status`=#{status}
+		</if>
+		ORDER BY fb.`status` ASC,
+		fb.`create_time` DESC
+	</select>
+	<select id="findPatientFeedBackList" resultType="com.hxp.commonality.dto.CommonFeedBackDto"
+		parameterType="com.hxp.commonality.po.CommonFeedBack">
+		SELECT 
+		  fb.`id`,
+		  fb.`mobile`,
+		  su.`id` AS replySysUserId,
+		  su.`account_name` AS replySysUserName,
+		  fb.`content`,
+		  fb.`create_time` AS createTime,
+		  fb.`reply_time` AS replyTime,
+		  fb.`reply_content` AS replyContent,
+		  fb.status 
+		FROM
+		  common_feed_back fb 
+		  LEFT JOIN `sys_user` su 
+		    ON fb.`reply_user_id` = su.`id` 
+		WHERE fb.`type` = 2
+		<if test="status!=null">
+		AND fb.`status`=#{status}
+		</if>
+		ORDER BY fb.`status` ASC,
+		  fb.`create_time` DESC 
+	</select>
+	<!-- self end -->
+</mapper>
