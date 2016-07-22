@@ -1,0 +1,1 @@
+项目右键 ---> Rus as ---> maven build ----> package -P online (pom.xml文件中定义的值)
