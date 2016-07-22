@@ -1,0 +1,3 @@
+使用JedisManager类时，请在先引入kld-common.jar包，
+然后复制redisConfig-simple.properties属性文件到自己项目下的资源根目录下，
+并改名为redisConfig.properties 即可。

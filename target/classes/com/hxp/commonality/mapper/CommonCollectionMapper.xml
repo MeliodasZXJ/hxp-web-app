@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hxp.sys.po.CommonCollection" >
+  <resultMap id="BaseResultMap" type="com.hxp.sys.po.CommonCollection" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="user_id" property="userId" jdbcType="BIGINT" />
+    <result column="collect_rule" property="collectRule" jdbcType="INTEGER" />
+    <result column="collect_type" property="collectType" jdbcType="INTEGER" />
+    <result column="obj_id" property="objId" jdbcType="BIGINT" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+    id, collect_rule, collect_type, obj_id, create_time,user_id
+  </sql>
+
+  <select id="get" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from common_collection
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+
+  <delete id="delete" parameterType="com.hxp.sys.po.CommonCollection" >
+    delete from common_collection
+    where collect_rule = #{collectRule} AND collect_type = #{collectType} AND user_id = #{userId} AND obj_id = #{objId}
+  </delete>
+
+  <insert id="insert" parameterType="com.hxp.sys.po.CommonCollection" >
+    insert into common_collection (id,user_id,collect_rule, collect_type,
+      obj_id, create_time)
+    values (#{id,jdbcType=BIGINT},#{userId,jdbcType=BIGINT}, #{collectRule,jdbcType=INTEGER}, #{collectType,jdbcType=INTEGER},
+      #{objId,jdbcType=BIGINT}, #{createTime,jdbcType=TIMESTAMP})
+  </insert>
+
+  <update id="update" parameterType="com.hxp.sys.po.CommonCollection" >
+    update common_collection
+    <set >
+      <if test="collectRule != null" >
+        collect_rule = #{collectRule,jdbcType=INTEGER},
+      </if>
+      <if test="collectType != null" >
+        collect_type = #{collectType,jdbcType=INTEGER},
+      </if>
+      <if test="objId != null" >
+        obj_id = #{objId,jdbcType=BIGINT},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+
+  <select id="selectByMyCollecDoctor" parameterType="java.lang.Long" resultType="com.hxp.sys.dto.DoctorCollecDto">
+      -- 我的医生，先查询医生
+            SELECT
+          dc.`head_path` AS headPath,
+          -- 头像
+          dc.`name` AS docName,
+          -- 医生名称
+          dc.`id` AS docId,
+          -- 医生ID
+          dc.territory AS territory,
+          -- 医生擅长
+          ho.`name` AS hospitalName,
+          -- 医院名称
+          dic.`value` AS professional,
+          -- 医生职称
+          dept.`name` AS deptName,
+          -- 科室名称
+          dc.intro AS intro -- 简介
+        FROM
+          doc_doctor_info dc
+          LEFT JOIN common_collection co
+            ON co.`obj_id` = dc.`id`
+          LEFT JOIN `doc_doctor_hospital_info` ho
+            ON dc.`hospital_id` = ho.`id`
+          LEFT JOIN `sys_dic` dic
+            ON dc.`type` = dic.`code`
+           AND dic.`parentCode` = 'doctorZc'
+          LEFT JOIN `doc_department_info` dept
+            ON dc.`dept_id` = dept.`id`
+        WHERE
+           co.`user_id` = #{userId,jdbcType=BIGINT} -- 变量
+           AND co.`collect_rule` = 1
+          AND co.`collect_type` = 2
+          GROUP BY dc.`id`
+  </select>
+
+
+  <select id="getCollecNumByDocId" resultType="java.lang.Integer" parameterType="java.lang.Long">
+      SELECT
+        COUNT(1)
+      FROM
+        common_collection t
+      WHERE t.`collect_type` = 2
+        AND t.`collect_rule` = 1
+        AND t.`obj_id` = #{docId} -- 医生ID
+  </select>
+
+
+    <select id="selectDoctorIsAttention" resultType="java.lang.Integer" parameterType="java.util.Map">
+        SELECT
+        COUNT(1)
+      FROM
+        common_collection t
+      WHERE t.`obj_id` = #{doctorId}
+        AND t.`user_id` = #{patientId}
+        AND t.`collect_type` = 2
+        AND t.`collect_rule` = 1
+    </select>
+
+
+</mapper>

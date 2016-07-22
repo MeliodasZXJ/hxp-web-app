@@ -1,5 +1,7 @@
 package com.hxp.patient.service;
 
+import java.util.List;
+
 import com.hxp.patient.po.PatientCustomer;
 
 /**
@@ -56,4 +58,9 @@ public interface IPatientCustomerService {
      * 根据手机号查询
      */
     PatientCustomer getByPatientMobile(String mobile);
+    
+    
+    List<PatientCustomer> getPatientCustomerList(PatientCustomer patientCustomer);
+
+    PatientCustomer selectByPatientById(Long id);
 }

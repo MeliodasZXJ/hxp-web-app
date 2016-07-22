@@ -1,38 +1,35 @@
 package com.hxp.patient.dto;
 
 import java.io.Serializable;
+import java.util.Date;
 
 public class PatientRecordImgDto implements Serializable {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 2169597463852807086L;
-	private String sessionId;
-	private String imgUrl;
-	private String thumbnailUrl;
+    private static final long serialVersionUID = 2169597463852807086L;
+    private String imgUrl;
+    private String thumbnailUrl;
+    private Date createTime;
 
-	public String getSessionId() {
-		return sessionId;
-	}
+    public String getImgUrl() {
+        return imgUrl;
+    }
 
-	public void setSessionId(String sessionId) {
-		this.sessionId = sessionId;
-	}
+    public void setImgUrl(String imgUrl) {
+        this.imgUrl = imgUrl;
+    }
 
-	public String getImgUrl() {
-		return imgUrl;
-	}
+    public String getThumbnailUrl() {
+        return thumbnailUrl;
+    }
 
-	public void setImgUrl(String imgUrl) {
-		this.imgUrl = imgUrl;
-	}
+    public void setThumbnailUrl(String thumbnailUrl) {
+        this.thumbnailUrl = thumbnailUrl;
+    }
 
-	public String getThumbnailUrl() {
-		return thumbnailUrl;
-	}
+    public Date getCreateTime() {
+        return createTime;
+    }
 
-	public void setThumbnailUrl(String thumbnailUrl) {
-		this.thumbnailUrl = thumbnailUrl;
-	}
-
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
 }

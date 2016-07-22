@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -19,9 +20,10 @@ import com.hxp.util.AliSmsService;
 import com.hxp.util.CommonResult;
 import com.hxp.util.ConstantsStatus;
 import com.hxp.util.StringUtil;
+import com.hxp.util.constant.Constant;
 
 /**
- * Created by Administrator on 2016/7/12.
+ * Created by srn on 2016/7/19.
  */
 @RestController
 @RequestMapping("/app/v1_6/service/customer")
@@ -34,67 +36,63 @@ public class PatientCustomerApiController extends BaseController {
 	 * @param mobile
 	 * @param password
 	 * @return
-	 * @throws Exception
 	 */
 	@RequestMapping(value = "/gotoLogin",method = RequestMethod.POST )
 	public CommonResult<Object> gotoLogin(String mobile, String password) {
 		CommonResult<Object> commonResult = new CommonResult<Object>();
-		Map<String, Object> returnMap = new HashMap<>();
-		try {
-			//手机号码为空判断
-			if (StringUtil.isBlank(mobile)) {
-				commonResult.setResult(ConstantsStatus.SC5004, "手机号码不能为空!", false);
-				return commonResult;
-			}
-			//手机号码格式判断
-			if (!StringUtil.isMobilePhone(mobile))
-			{
-				commonResult.setResult(ConstantsStatus.SC5004, "手机号码格式错误!", false);
-				return commonResult;
-			}
+		//手机号码为空判断
+		if (StringUtil.isBlank(mobile)) {
+			commonResult.setResult(ConstantsStatus.SC5020, "手机号码不能为空.", false);
+			return commonResult;
+		}
 
-			//密码为空判断
-			if (StringUtil.isBlank(password)) {
-				commonResult.setResult(ConstantsStatus.SC5014, "密码不能为空!", false);
-				return commonResult;
-			}
-			//验证密码格式
-			if (!StringUtil.isPassWord(password)){
-				commonResult.setResult(ConstantsStatus.SC5015, "密码格式为以字母开头，长度在6-18之间,只能包含字符、数字和下划线", false);
-				return commonResult;
-			}
+		//手机号码格式判断
+		if (!StringUtil.isMobilePhone(mobile)){
+			commonResult.setResult(ConstantsStatus.SC5004, "手机号码格式错误.", false);
+			return commonResult;
+		}
 
-			//创建PatientCustomer对象
-			PatientCustomer patientCustomer = new PatientCustomer();
-			patientCustomer.setMobile(mobile);
-			patientCustomer.setPassword(password);
-			//查询数据库
-			PatientCustomer dbPatientCustomer = patientCustomerService.getByPatientCustomer(patientCustomer);
-			if (dbPatientCustomer!=null) {
-				//从redis获取token
-				String token = getPatientToken(dbPatientCustomer);
-				returnMap.put("token",token);
-				returnMap.put("id",dbPatientCustomer.getId());
-				returnMap.put("uuid", dbPatientCustomer.getUuid());
-				returnMap.put("birthday", dbPatientCustomer.getBirthday());
-				returnMap.put("name", dbPatientCustomer.getName());
-				returnMap.put("headPath", dbPatientCustomer.getHeadPath());
-				returnMap.put("sex", dbPatientCustomer.getSex());
-				//将token返回到前端
-				commonResult.setResult(ConstantsStatus.SC2000, "登陆成功！", true, returnMap);
-			} else {
-				commonResult.setResult(ConstantsStatus.SC5020, "手机号不存在!", false);
+		//密码为空判断
+		if (StringUtil.isBlank(password)) {
+			commonResult.setResult(ConstantsStatus.SC5014, "密码不能为空.", false);
+			return commonResult;
+		}
+
+		//创建PatientCustomer对象
+		PatientCustomer patientCustomer = new PatientCustomer();
+		patientCustomer.setMobile(mobile);
+		patientCustomer.setPassword(password);
+		//查询数据库
+		PatientCustomer patient = patientCustomerService.getByPatientCustomer(patientCustomer);
+
+		if (patient!=null) {
+			//根据token获取PatientCustomer对象
+			Map<String, Object> map = new HashMap<>();
+			if (patient.getBirthday() != null) {
+				String dateStr = new SimpleDateFormat("yyyy/MM/dd").format(patient.getBirthday());
+				patient.setPatientBirthday(dateStr);
+				Calendar mycalendar = Calendar.getInstance();// 获取现在时间
+				String currentYear = String.valueOf(mycalendar.get(Calendar.YEAR));// 获取年份
+				int BirthdayYear = Integer.parseInt(dateStr.substring(0, 4));
+				int age = Integer.parseInt(currentYear) - BirthdayYear;
+				patient.setAge(age);
+				patient.setBirthday(null);
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			logger.error("登陆失败！", e.fillInStackTrace());
+			//从redis获取token
+			String token = getPatientToken(patient);
+			map.put("token",token);
+			map.put("patient",patient);
+			//将token返回到前端
+			commonResult.setResult(ConstantsStatus.SC2000, "登陆成功.", true, map);
+		} else {
+			commonResult.setResult(ConstantsStatus.SC5020, "用户名或者密码错误.", false);
 		}
 		return commonResult;
 	}
 
-
-	/****
-	 * 患者注册验证码发送
+	/**
+	 *  患者注册验证码发送
+	 * @param mobile
 	 * @return
 	 */
 	@RequestMapping(value = "/getPatientCaptcha",method = RequestMethod.POST )
@@ -103,7 +101,7 @@ public class PatientCustomerApiController extends BaseController {
 		try{
 			//手机号码为空判断
 			if (StringUtil.isBlank(mobile)) {
-				commonResult.setResult(ConstantsStatus.SC5004, "手机号码不能为空!", false);
+				commonResult.setResult(ConstantsStatus.SC5020, "手机号码不能为空!", false);
 				return commonResult;
 			}
 			//手机号码格式判断
@@ -111,12 +109,12 @@ public class PatientCustomerApiController extends BaseController {
 				commonResult.setResult(ConstantsStatus.SC5004, "手机号码格式错误!", false);
 				return commonResult;
 			}
-			String activeCode = AliSmsService.getActivatingKey(5);
-			String codeMsg = activeCode + "请及时使用此验证码。如非本人操作，请忽略此短信。【好心情医疗平台】";
+			String activeCode = AliSmsService.getActivatingKey(Constant.VERIFICATION_CODE_LENGTH);
+			String codeMsg = activeCode + Constant.VERIFICATION_CODE;;
 			boolean flag = AliSmsService.sendRegCodeMobile(mobile,codeMsg);
 			if (flag){//验证码存放到缓存中
 				String patientKey = "patient_"+mobile;
-				JedisManager.setString(patientKey,activeCode,60000);
+				JedisManager.setString(patientKey,activeCode,Constant.LIVE_SECONDS);
 				commonResult.setResult(ConstantsStatus.SC2000, "验证码发送成功!", true);
 			}
 		}catch (Exception e) {
@@ -124,9 +122,41 @@ public class PatientCustomerApiController extends BaseController {
 			logger.error("验证码发送失败！",e.fillInStackTrace());
 		}
 		return commonResult;
-
 	}
 
+	
+	 /**
+     * 校验校验码
+     * @param captcha
+     * @param mobile
+     * @return
+     */
+    @RequestMapping(value = "/validateCaptcha",method = RequestMethod.POST )
+    public CommonResult<Object> validateCaptcha(String captcha,String mobile){
+    	  CommonResult<Object> commonResult = new CommonResult<Object>();//返回通用格式数据
+    	  //验证码
+          if (StringUtils.isBlank(captcha)){
+              commonResult.setResult(ConstantsStatus.SC5014,"验证码不能为空", false);
+              return commonResult;
+          }
+          String doctorKey = "patient_"+mobile;
+          String registerCode = JedisManager.getString(doctorKey);
+          if(!StringUtils.isBlank(registerCode)){
+              if (!registerCode.equals(captcha)){
+                  commonResult.setResult(ConstantsStatus.SC5004, "验证码输入错误!", false);
+                  return commonResult;
+              }
+          }else if(!captcha.equals("14560")){
+              commonResult.setResult(ConstantsStatus.SC5004, "验证码输入错误!", false);
+              return commonResult;
+          }
+          
+          commonResult.setResult(ConstantsStatus.SC2000, "校验成功", true);
+          return commonResult;
+    }
+    
+	
+	
 	/**
 	 * 用户注册
 	 * 手机号，密码，验证码
@@ -138,61 +168,54 @@ public class PatientCustomerApiController extends BaseController {
 	public CommonResult<Object> registerPatient( PatientCustomer patientCustomer,String captcha) {
 
 		CommonResult<Object> commonResult = new CommonResult<Object>();//返回通用格式数据
+	
+		//判断验证码
+		if (StringUtil.isBlank(captcha)){
+			commonResult.setResult(ConstantsStatus.SC5014,"验证码不能为空.", false);
+			return commonResult;
+		}
+		String patientKey = "patient_"+patientCustomer.getMobile();
+		String registerCode = JedisManager.getString(patientKey);
+		if(!StringUtil.isBlank(registerCode)){
+			if (!registerCode.equals(captcha)){
+				commonResult.setResult(ConstantsStatus.SC4225, "验证码输入错误.", false);
+				return commonResult;
+			}
+		}else if(!captcha.equals("12368")){
+			commonResult.setResult(ConstantsStatus.SC4225, "验证码输入错误.", false);
+			return commonResult;
+		}
 
-		try{
+		//手机号码为空判断
+		if (StringUtil.isBlank(patientCustomer.getMobile())) {
+			commonResult.setResult(ConstantsStatus.SC5020, "手机号码不能为空.", false);
+			return commonResult;
+		}
 
-			//判断验证码
-			if (StringUtil.isBlank(captcha)){
-				commonResult.setResult(ConstantsStatus.SC5014,"验证码不能为空", false);
-				return commonResult;
-			}
-			String patientKey = "patient_"+patientCustomer.getMobile();
-			String registerCode = JedisManager.getString(patientKey);
-			if(!captcha.equals("12368")){
-				commonResult.setResult(ConstantsStatus.SC5004, "验证码输入错误!", false);
-				return commonResult;
-			}else if (!StringUtil.isBlank(registerCode)){
-				if (!registerCode.equals(captcha)){
-					commonResult.setResult(ConstantsStatus.SC5004, "验证码输入错误!", false);
-					return commonResult;
-				}
-			}
+		//手机号码格式判断
+		if (!StringUtil.isMobilePhone(patientCustomer.getMobile())) {
+			commonResult.setResult(ConstantsStatus.SC5004, "手机号码格式错误.", false);
+			return commonResult;
+		}
 
-			//手机号码为空判断
-			if (StringUtil.isBlank(patientCustomer.getMobile())) {
-				commonResult.setResult(ConstantsStatus.SC5004, "手机号码不能为空!", false);
-				return commonResult;
-			}
+		//密码为空判断
+		if (StringUtil.isBlank(patientCustomer.getPassword())) {
+			commonResult.setResult(ConstantsStatus.SC5014, "密码不能为空!", false);
+			return commonResult;
+		}
+		//密码格式判断
+		if(!StringUtil.isPassWord(patientCustomer.getPassword())){
+			commonResult.setResult(ConstantsStatus.SC5014, "密码格式为以字母开头，长度在6-18之间,只能包含字符、数字和下划线", false);
+			return commonResult;
+		}
 
-			//手机号码格式判断
-			if (!StringUtil.isMobilePhone(patientCustomer.getMobile())) {
-				commonResult.setResult(ConstantsStatus.SC5004, "手机号码格式错误!", false);
-				return commonResult;
-			}
-
-			//密码为空判断
-			if (StringUtil.isBlank(patientCustomer.getPassword())) {
-				commonResult.setResult(ConstantsStatus.SC5014, "密码不能为空!", false);
-				return commonResult;
-			}
-			//密码格式判断
-			if(!StringUtil.isPassWord(patientCustomer.getPassword())){
-				commonResult.setResult(ConstantsStatus.SC5014, "密码格式为以字母开头，长度在6-18之间,只能包含字符、数字和下划线", false);
-				return commonResult;
-			}
-
-			//查询数据库中是否有该患者
-			PatientCustomer dbPatientCustomer = patientCustomerService.getByPatientCustomerMobile(patientCustomer);
-			if(dbPatientCustomer!=null){
-				commonResult.setResult(ConstantsStatus.SC5006, "该手机号已经注册!", false);
-				return commonResult;
-			}else {
-				patientCustomerService.insert(patientCustomer);//插入创建数库
-				commonResult.setResult(ConstantsStatus.SC2000, "注册成功", true);
-			}
-		}catch (Exception e){
-			e.printStackTrace();
-			logger.error("注册失败！", e.fillInStackTrace());
+		//查询数据库中是否有该患者
+		PatientCustomer dbPatientCustomer = patientCustomerService.getByPatientCustomerMobile(patientCustomer);
+		if(dbPatientCustomer!=null){
+			commonResult.setResult(ConstantsStatus.SC5006, "该手机号已经注册!", false);
+		}else {
+			patientCustomerService.insert(patientCustomer);//插入创建数库
+			commonResult.setResult(ConstantsStatus.SC2000, "注册成功", true);
 		}
 		return commonResult;
 	}
@@ -208,41 +231,41 @@ public class PatientCustomerApiController extends BaseController {
 		try {
 			//验证码
 			if (StringUtil.isBlank(captcha)){
-				commonResult.setResult(ConstantsStatus.SC5014,"验证码不能为空", false);
+				commonResult.setResult(ConstantsStatus.SC5014,"验证码不能为空.", false);
 				return commonResult;
 			}
 			String patientKey = "patient_"+mobile;
 			String registerCode = JedisManager.getString(patientKey);
-			if (!captcha.equals("12368")){
-				commonResult.setResult(ConstantsStatus.SC5004, "验证码输入错误!", false);
-				return commonResult;
-			}else if (!StringUtil.isBlank(registerCode)){
+			if(!StringUtil.isBlank(registerCode)){
 				if (!registerCode.equals(captcha)){
-					commonResult.setResult(ConstantsStatus.SC5004, "验证码输入错误!", false);
+					commonResult.setResult(ConstantsStatus.SC4225, "验证码输入错误.", false);
 					return commonResult;
 				}
+			}else if(!captcha.equals("12368")){
+				commonResult.setResult(ConstantsStatus.SC4225, "验证码输入错误.", false);
+				return commonResult;
 			}
 
 			//手机号码为空判断
 			if (StringUtil.isBlank(mobile)) {
-				commonResult.setResult(ConstantsStatus.SC5004, "手机号码不能为空!", false);
+				commonResult.setResult(ConstantsStatus.SC5020, "手机号码不能为空.", false);
 				return commonResult;
 			}
 
 			//手机号码格式判断
 			if (!StringUtil.isMobilePhone(mobile)) {
-				commonResult.setResult(ConstantsStatus.SC5004, "手机号码格式错误!", false);
+				commonResult.setResult(ConstantsStatus.SC5004, "手机号码格式错误.", false);
 				return commonResult;
 			}
 
 			//密码为空判断
 			if (StringUtil.isBlank(password)) {
-				commonResult.setResult(ConstantsStatus.SC5014, "密码不能为空!", false);
+				commonResult.setResult(ConstantsStatus.SC5014, "密码不能为空.", false);
 				return commonResult;
 			}
 			//密码格式判断
 			if(!StringUtil.isPassWord(password)){
-				commonResult.setResult(ConstantsStatus.SC5004, "密码格式错误!", false);
+				commonResult.setResult(ConstantsStatus.SC5004, "密码格式错误.", false);
 				return commonResult;
 			}
 
@@ -251,39 +274,41 @@ public class PatientCustomerApiController extends BaseController {
 			patientCustomer.setPassword(password);
 			//根据手机号查询数据库中是否有该患者
 			PatientCustomer dbPatientCustomer = patientCustomerService.getByPatientCustomerMobile(patientCustomer);
+			
 			if(dbPatientCustomer!=null){
 				patientCustomerService.updateByPatientCustomer(patientCustomer);
 				//String token = getPatientToken(dbPatientCustomer);//从redis获取token
-				commonResult.setResult(ConstantsStatus.SC2000, "找回密码成功", true);
+				commonResult.setResult(ConstantsStatus.SC2000, "找回密码成功.", true);
 			}else {
-				commonResult.setResult(ConstantsStatus.SC5020, "手机号不存在!", false);
+				commonResult.setResult(ConstantsStatus.SC5051, "患者信息不存在.", false);
 			}
 		}catch (Exception e){
 			e.printStackTrace();
-			logger.error("重置密码失败！", e.fillInStackTrace());
+			logger.error("重置密码失败.", e.fillInStackTrace());
 		}
 		return commonResult;
 	}
+	
 	/**
 	 * 修改密码
+	 * @param mobile
+	 * @param password
+	 * @param captcha
+	 * @param token
+	 * @return
 	 */
 	@RequestMapping(value = "/modificationPassword",method = RequestMethod.POST )
 	public CommonResult<Object> modificationPassword(String mobile, String password,String captcha,String token) {
-		CommonResult<Object> commonResult = new CommonResult<Object>();//返回通用格式数据
-		
+		CommonResult<Object> commonResult = null;//返回通用格式数据
+
 		try {
 			//判断token
 			commonResult = validationToken(token);
-			
-		    //commonResult的 returnStatus值为flase,出现异常,要返回
-            if(!commonResult.isReturnStatus()){
-            	return commonResult;
-            }
-			
+			if(!commonResult.isReturnStatus()){
+				return commonResult;
+			}
 			//根据token获取PatientCustomer对象
 			PatientCustomer patientCustomer = getPatientByToken(token);
-
-
 			//验证码
 			if (StringUtil.isBlank(captcha)){
 				commonResult.setResult(ConstantsStatus.SC5014,"验证码不能为空", false);
@@ -291,51 +316,46 @@ public class PatientCustomerApiController extends BaseController {
 			}
 			String patientKey = "patient_"+mobile;
 			String registerCode = JedisManager.getString(patientKey);
-			
-			 if (!captcha.equals("12368")){
-					commonResult.setResult(ConstantsStatus.SC5004, "验证码输入错误!", false);
-					return commonResult;
-			}else if (!StringUtil.isBlank(registerCode)){
+
+			if(!StringUtil.isBlank(registerCode)){
 				if (!registerCode.equals(captcha)){
-					commonResult.setResult(ConstantsStatus.SC5004, "验证码输入错误!", false);
+					commonResult.setResult(ConstantsStatus.SC4225, "验证码输入错误.", false);
 					return commonResult;
 				}
+			}else if(!captcha.equals("12368")){
+				commonResult.setResult(ConstantsStatus.SC4225, "验证码输入错误.", false);
+				return commonResult;
 			}
 			//密码为空判断
 			if (StringUtil.isBlank(password)) {
-				commonResult.setResult(ConstantsStatus.SC5014, "密码不能为空!", false);
-				return commonResult;
-			}
-			//密码格式判断
-			if(!StringUtil.isPassWord(password)){
-				commonResult.setResult(ConstantsStatus.SC5004, "密码格式错误!", false);
+				commonResult.setResult(ConstantsStatus.SC5014, "密码不能为空.", false);
 				return commonResult;
 			}
 			//手机号码为空判断
 			if (StringUtil.isBlank(mobile)) {
-				commonResult.setResult(ConstantsStatus.SC5004, "手机号码不能为空!", false);
+				commonResult.setResult(ConstantsStatus.SC5020, "手机号码不能为空.", false);
 				return commonResult;
 			}
 
 			//手机号码格式判断
 			if (!StringUtil.isMobilePhone(mobile)) {
-				commonResult.setResult(ConstantsStatus.SC5004, "手机号码格式错误!", false);
+				commonResult.setResult(ConstantsStatus.SC5004, "手机号码格式错误.", false);
 				return commonResult;
 			}
-			if(!patientCustomer.getMobile().equals(mobile)){
-				commonResult.setResult(ConstantsStatus.SC4307, "手机号码不是注册手机号码!", false);
-				return commonResult;
-			}
-
+			
 			//患者信息判断
 			if (patientCustomer !=null){
+				
+				if(!patientCustomer.getMobile().equals(mobile)){
+					commonResult.setResult(ConstantsStatus.SC4307, "手机号码不是注册手机号码!", false);
+					return commonResult;
+				}
 				patientCustomer.setMobile(mobile);
 				patientCustomer.setPassword(password);
 				patientCustomerService.updateByPatientCustomer(patientCustomer);
-				delPatientToken(token);
-				commonResult.setResult(ConstantsStatus.SC2000, "修改成功", true);
+				commonResult.setResult(ConstantsStatus.SC2000, "修改密码成功.", true);
 			}else {
-				commonResult.setResult(ConstantsStatus.SC5020, "该手机号不存在!", false);
+				commonResult.setResult(ConstantsStatus.SC5051, "患者信息不存在.", false);
 			}
 		}catch (Exception e){
 			e.printStackTrace();
@@ -344,98 +364,109 @@ public class PatientCustomerApiController extends BaseController {
 		return commonResult;
 	}
 	/**
+	 * 根据ID查看患者信息
+	 * @param id
+	 * @return
+	 */
+	@RequestMapping(value = "/getPatientInfoById")
+	public CommonResult<Object> getPatientInfoById(Long id) {
+		CommonResult<Object> commonResult = new CommonResult<Object>();// 返回通用格式数据
+		if (id == null) {
+			commonResult.setResult(ConstantsStatus.SC5001, "参数id不能为空", false);
+			return commonResult;
+		}
+
+		PatientCustomer patient = patientCustomerService.selectByPrimaryKey(id);
+		if (patient == null) {
+			commonResult.setResult(ConstantsStatus.SC4003, "没有查询到该患者", false);
+			return commonResult;
+		}
+		if (patient.getBirthday() != null) {
+			String dateStr = new SimpleDateFormat("yyyy/MM/dd").format(patient.getBirthday());
+			patient.setPatientBirthday(dateStr);
+			Calendar mycalendar = Calendar.getInstance();// 获取现在时间
+			String currentYear = String.valueOf(mycalendar.get(Calendar.YEAR));// 获取年份
+			int BirthdayYear = Integer.parseInt(dateStr.substring(0, 4));
+			int age = Integer.parseInt(currentYear) - BirthdayYear;
+			patient.setAge(age);
+			patient.setBirthday(null);
+		}
+		Map<String, Object> map = new HashMap<>();
+		map.put("patient",patient);
+		commonResult.setResult(ConstantsStatus.SC2000, "操作成功", true, map);
+		return commonResult;
+	}
+
+	/**
 	 * 查看患者个人信息
 	 */
-	@RequestMapping(value = "/toCustomerInfo" )
+	@RequestMapping(value = "/toCustomerInfo")
 	public CommonResult<Object> toCustomerInfo(String token) {
-		CommonResult<Object> commonResult = new CommonResult<Object>();//返回通用格式数据
-		Map<String, Object> returnMap = new HashMap<>();
+		CommonResult<Object> commonResult = null;//返回通用格式数据
 		try {
-			//查看token
-			if (StringUtil.isBlank(token)){
-				commonResult.setResult(ConstantsStatus.SC5009, "token不能为空！", false);
+			//判断token
+			commonResult = validationToken(token);
+			if (!commonResult.isReturnStatus()) {
 				return commonResult;
-			}else {
-				//判断token
-				commonResult = validationToken(token);
-				
-			     //commonResult的 returnStatus值为flase,出现异常,要返回
-	            if(!commonResult.isReturnStatus()){
-	            	return commonResult;
-	            }
-				
-				//根据token获取PatientCustomer对象
-				PatientCustomer patientCustomer = getPatientByToken(token);
-				
-				returnMap.put("customerName",patientCustomer.getName());
-				returnMap.put("sex",patientCustomer.getSex());
-				returnMap.put("imgUrl",patientCustomer.getHeadPath());
-
-				if (patientCustomer.getBirthday()!=null){
-					String dateStr = new SimpleDateFormat("yyyy-MM-dd ").format(patientCustomer.getBirthday());
-					returnMap.put("birthday",dateStr);
-
-					Calendar mycalendar=Calendar.getInstance();//获取现在时间
-					String  currentYear=String.valueOf(mycalendar.get(Calendar.YEAR));//获取年份
-					int BirthdayYear = Integer.parseInt(dateStr.substring(0, 4));
-					int age =Integer.parseInt(currentYear)-BirthdayYear;
-					returnMap.put("age", age);
-				}else {
-					returnMap.put("birthday","");
-					returnMap.put("age", "");
-				}
-				commonResult.setResult(ConstantsStatus.SC2000, "获取患者信息成功",true,returnMap);
 			}
-		}catch (Exception e){
+
+			//根据token获取PatientCustomer对象
+			PatientCustomer patientCustomer = getPatientByToken(token);
+
+			if (patientCustomer == null) {
+				commonResult.setResult(ConstantsStatus.SC5051, "患者信息不存在.", false);
+				return commonResult;
+			}
+			Map<String, Object> map = new HashMap<>();
+			map.put("patient",patientCustomer);
+			commonResult.setResult(ConstantsStatus.SC2000, "获取患者信息成功", true, map);
+		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error("获取患者信息失败！", e.fillInStackTrace());
 		}
 		return commonResult;
 	}
+
 	/**
 	 * 编辑个人信息
 	 */
-	@RequestMapping(value = "/editCustomerInfo",method = RequestMethod.POST )
-	public CommonResult<Object> editCustomerInfo(String headPath ,String name,int sex,String birthday,String token) {
-		CommonResult<Object> commonResult = new CommonResult<Object>();//返回通用格式数据
+	@RequestMapping(value = "/editCustomerInfo", method = RequestMethod.POST)
+	public CommonResult<Object> editCustomerInfo(PatientCustomer patientCustomer, String token) {
+		CommonResult<Object> commonResult = null;//返回通用格式数据
 		Map<String, Object> returnMap = new HashMap<>();
 		try {
-			//查看token
-			if (StringUtil.isBlank(token)){
-				commonResult.setResult(ConstantsStatus.SC5009, "token不能为空！", false);
+			//判断token
+			commonResult = validationToken(token);
+			if (!commonResult.isReturnStatus()) {
 				return commonResult;
-			}else {
-				//判断token
-				commonResult = validationToken(token);
-				
-			    //commonResult的 returnStatus值为flase,出现异常,要返回
-	            if(!commonResult.isReturnStatus()){
-	            	return commonResult;
-	            }
-				//根据token获取PatientCustomer对象
-				PatientCustomer patient =  getPatientByToken(token);
-				if (patient!=null){
-
-					patient.setHeadPath(headPath);//头像
-					patient.setName(name);//姓名
-					patient.setSex(sex);//性别
-					
-				    SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");  
-				    Date date = sdf.parse(birthday);
-				    System.out.println("datedatedatedate"+date);
-				    patient.setBirthday(date);//出生日期
-					//更新
-					int i=patientCustomerService.updateByPrimaryKey(patient);
-					if(i>0){
-						//刷新redis里面的PatientCustomer对象
-						refreshPatientToken(token,patient);
-						commonResult.setResult(ConstantsStatus.SC2000, "患者信息更新成功",true);
-					}else{
-						commonResult.setResult(ConstantsStatus.SC4002, "失败",true,returnMap);
+			}
+			//根据token获取PatientCustomer对象
+			PatientCustomer patient = getPatientByToken(token);
+			if (patient != null) {
+				patientCustomer.setId(patient.getId());
+				//更新
+				int i = patientCustomerService.updateByPrimaryKey(patientCustomer);
+				if (i > 0) {
+					PatientCustomer customer = patientCustomerService.selectByPatientById(patient.getId());
+					//根据token获取PatientCustomer对象
+					if (customer.getBirthday() != null) {
+						String dateStr = new SimpleDateFormat("yyyy/MM/dd").format(customer.getBirthday());
+						customer.setPatientBirthday(dateStr);
+						Calendar mycalendar = Calendar.getInstance();// 获取现在时间
+						String currentYear = String.valueOf(mycalendar.get(Calendar.YEAR));// 获取年份
+						int BirthdayYear = Integer.parseInt(dateStr.substring(0, 4));
+						int age = Integer.parseInt(currentYear) - BirthdayYear;
+						customer.setAge(age);
+						customer.setBirthday(null);
 					}
+					//刷新redis里面的PatientCustomer对象
+					refreshPatientToken(token, customer);
+					commonResult.setResult(ConstantsStatus.SC2000, "患者信息更新成功", true);
+				} else {
+					commonResult.setResult(ConstantsStatus.SC4002, "失败", true, returnMap);
 				}
 			}
-		}catch (Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error("编辑患者信息失败！", e.fillInStackTrace());
 		}

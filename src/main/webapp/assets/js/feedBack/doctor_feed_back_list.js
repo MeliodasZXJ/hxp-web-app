@@ -58,9 +58,10 @@ function loadDocFbList() {
 		pagination : true,
 		sidePagination : "server",
 		pageNumber : 1,
-		pageSize : 5,
-		pageList : [ 5, 10, 20 ],
+		pageSize : 10,
+		pageList : [10, 20, 30 ],
 		queryParamsType : "limit",
+		queryParams:queryParams,
 		contentType : "application/x-www-form-urlencoded",
 		columns : [ {
 			field : 'id',
@@ -148,10 +149,21 @@ function search() {
 
 	$('#doctorFbListTable').bootstrapTable('refresh', {
 		query : {
-			status : $("select[name='status']").val()
+			status : $("select[name='status']").val(),
+			limit:10,
+			offset:0
 		}
 	});
 
+}
+
+function queryParams(params) {
+	 
+	return {
+		status : $("select[name='status']").val(),
+		limit:params.limit,
+		offset:params.offset
+	}
 }
 function operateFormatter(value, row, index) {
 	if (row.status == 0) { // 未处理

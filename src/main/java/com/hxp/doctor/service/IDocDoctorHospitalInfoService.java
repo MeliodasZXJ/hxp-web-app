@@ -15,4 +15,9 @@ public interface IDocDoctorHospitalInfoService {
      * @return
      */
     List<DocDoctorHospitalInfo> findDocDoctorHospitalInfoList(DocDoctorHospitalInfo docDoctorHospitalInfo);
+    
+    void update(DocDoctorHospitalInfo docDoctorHospitalInfo);
+    
+    void insert(DocDoctorHospitalInfo docDoctorHospitalInfo);
+    
 }

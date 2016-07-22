@@ -57,6 +57,7 @@
 		<form class="form-horizontal m-t" id="feedBackForm">
 			<input type="hidden" name="id" id="handleId"/>
 			<input type="hidden" name="status" value="1"/>
+			<input type="hidden" name="replyUserId" value="${hxp_login_user.id}"/>
 			<div class="form-group">
 				<label class="col-sm-3 control-label">联系方式：</label>
 				<div class="col-sm-8" id="handleMobile">

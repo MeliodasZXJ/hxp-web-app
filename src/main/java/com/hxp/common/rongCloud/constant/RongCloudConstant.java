@@ -23,6 +23,7 @@ public class RongCloudConstant {
 		messageType.put("RC:CmdNtf", "9");//通用命令通知消息
 		messageType.put("RC:HsMsg","10");//客服握手消息
 		messageType.put("RC:SpMsg", "11");//客服挂断消息
+		messageType.put("RC:ReadNtf", "12");//
 
 		channelType=new HashMap<String, String>();
 		channelType.put("PERSON", "1");//二人会话

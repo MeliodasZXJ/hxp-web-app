@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hxp.commonality.po.CommonVideoComment" >
+  <resultMap id="BaseResultMap" type="com.hxp.commonality.po.CommonVideoComment" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="uuid" property="uuid" jdbcType="VARCHAR" />
+    <result column="video_uuid" property="videoUuid" jdbcType="VARCHAR" />
+    <result column="video_id" property="videoId" jdbcType="BIGINT" />
+    <result column="quest_uuid" property="questUuid" jdbcType="VARCHAR" />
+    <result column="quest_id" property="questId" jdbcType="BIGINT" />
+    <result column="user_type" property="userType" jdbcType="INTEGER" />
+    <result column="problem_desc" property="problemDesc" jdbcType="VARCHAR" />
+    <result column="conftime_state" property="conftimeState" jdbcType="INTEGER" />
+    <result column="audit_uuid" property="auditUuid" jdbcType="VARCHAR" />
+    <result column="audit_id" property="auditId" jdbcType="BIGINT" />
+    <result column="reply_message" property="replyMessage" jdbcType="VARCHAR" />
+    <result column="reply_time" property="replyTime" jdbcType="TIMESTAMP" />
+    <result column="conf_time" property="confTime" jdbcType="VARCHAR" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="reply_state" property="replyState" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, uuid, video_uuid, video_id, quest_uuid, quest_id, user_type, problem_desc, conftime_state, 
+    audit_uuid, audit_id, reply_message, reply_time, conf_time, remark, reply_state, 
+    create_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from common_video_comment
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from common_video_comment
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.hxp.commonality.po.CommonVideoComment" >
+    insert into common_video_comment (id, uuid, video_uuid, 
+      video_id, quest_uuid, quest_id, 
+      user_type, problem_desc, conftime_state, 
+      audit_uuid, audit_id, reply_message, 
+      reply_time, conf_time, remark, 
+      reply_state)
+    values (#{id,jdbcType=BIGINT}, #{uuid,jdbcType=VARCHAR}, #{videoUuid,jdbcType=VARCHAR}, 
+      #{videoId,jdbcType=BIGINT}, #{questUuid,jdbcType=VARCHAR}, #{questId,jdbcType=BIGINT}, 
+      #{userType,jdbcType=INTEGER}, #{problemDesc,jdbcType=VARCHAR}, #{conftimeState,jdbcType=INTEGER}, 
+      #{auditUuid,jdbcType=VARCHAR}, #{auditId,jdbcType=BIGINT}, #{replyMessage,jdbcType=VARCHAR}, 
+      #{replyTime,jdbcType=TIMESTAMP}, #{confTime,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, 
+      #{replyState,jdbcType=INTEGER})
+  </insert>
+  
+  <update id="updateByPrimaryKeySelective" parameterType="com.hxp.commonality.po.CommonVideoComment" >
+    update common_video_comment
+    <set >
+      <if test="uuid != null" >
+        uuid = #{uuid,jdbcType=VARCHAR},
+      </if>
+      <if test="videoUuid != null" >
+        video_uuid = #{videoUuid,jdbcType=VARCHAR},
+      </if>
+      <if test="videoId != null" >
+        video_id = #{videoId,jdbcType=BIGINT},
+      </if>
+      <if test="questUuid != null" >
+        quest_uuid = #{questUuid,jdbcType=VARCHAR},
+      </if>
+      <if test="questId != null" >
+        quest_id = #{questId,jdbcType=BIGINT},
+      </if>
+      <if test="userType != null" >
+        user_type = #{userType,jdbcType=INTEGER},
+      </if>
+      <if test="problemDesc != null" >
+        problem_desc = #{problemDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="conftimeState != null" >
+        conftime_state = #{conftimeState,jdbcType=INTEGER},
+      </if>
+      <if test="auditUuid != null" >
+        audit_uuid = #{auditUuid,jdbcType=VARCHAR},
+      </if>
+      <if test="auditId != null" >
+        audit_id = #{auditId,jdbcType=BIGINT},
+      </if>
+      <if test="replyMessage != null" >
+        reply_message = #{replyMessage,jdbcType=VARCHAR},
+      </if>
+      <if test="replyTime != null" >
+        reply_time = #{replyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="confTime != null" >
+        conf_time = #{confTime,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="replyState != null" >
+        reply_state = #{replyState,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+  <select id="selectCommentList" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select
+    <include refid="Base_Column_List" />
+    from common_video_comment
+    where video_id = #{videoId,jdbcType=BIGINT}
+    order by create_time desc
+  </select>
+ 
+</mapper>

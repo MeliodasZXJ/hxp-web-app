@@ -17,6 +17,16 @@ public class CommonCollection implements Serializable{
 
     private Date createTime;
 
+    private Integer attentionState;
+
+    public Integer getAttentionState() {
+        return attentionState;
+    }
+
+    public void setAttentionState(Integer attentionState) {
+        this.attentionState = attentionState;
+    }
+
     public Long getId() {
         return id;
     }

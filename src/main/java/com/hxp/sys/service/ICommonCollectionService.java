@@ -47,5 +47,22 @@ public interface ICommonCollectionService {
      * @param collection
      * @return
      */
-    List<DoctorCollecDto> selectByMyCollecDoctor(CommonCollection collection);
+    List<DoctorCollecDto> selectByMyCollecDoctor(int pageNum, int pageSize,CommonCollection collection);
+    /***
+     * 查询医生的关注量
+     * @param docId
+     * @return
+     * @throws Exception
+     */
+    int getCollecNumByDocId(Long docId)throws Exception;
+
+    /***
+     * 查询某个医生是否被用户关注
+     * @param patientId
+     * @param doctorId
+     * @return
+     * @throws Exception
+     */
+    boolean selectDoctorIsAttention(Long patientId, Long doctorId)throws Exception;
+
 }

@@ -2,6 +2,7 @@ package com.hxp.sys.controller.api;
 
 import java.util.List;
 
+import com.hxp.doctor.dto.DoctorDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -40,7 +41,7 @@ public class SysCommonCollectionApiController extends BaseController {
      */
     @RequestMapping(value = "/attention", method = RequestMethod.POST)
     @ResponseBody
-    public CommonResult<Object> selectAllProvince(CommonCollection collection,String token,String attentionState) {
+    public CommonResult<Object> attention(CommonCollection collection,String token,String attentionState) {
         CommonResult<Object> commonResult = new CommonResult<Object>();//返回通用格式数据
         try{
             if (StringUtil.isBlank(token)) {
@@ -55,20 +56,20 @@ public class SysCommonCollectionApiController extends BaseController {
                 }
                 collection.setUserId(patientByToken.getId());
             }else if (0 == collection.getCollectRule()){
-                DocDoctorInfo doctorByToken = getDoctorByToken(token);
+                DoctorDto doctorByToken = getDoctorByToken(token);
                 if (doctorByToken == null){
                     commonResult.setResult(ConstantsStatus.SC5010, "token不存在或者已经过期!", false);
                     return commonResult;
                 }
-                collection.setUserId(doctorByToken.getId());
+                collection.setUserId(doctorByToken.getDoctorId());
             }
 
             if ("1".equals(attentionState)){ //收藏
                 commonCollectionService.insertCommonCollection(collection);
-                commonResult.setResult(ConstantsStatus.SC2000, "收藏成功!", true);
+                commonResult.setResult(ConstantsStatus.SC2000, "收藏成功!", true,attentionState);
             }else if ("2".equals(attentionState)){ //取消收藏
                 commonCollectionService.deleteCollection(collection);
-                commonResult.setResult(ConstantsStatus.SC2000, "取消收藏成功!", true);
+                commonResult.setResult(ConstantsStatus.SC2000, "取消收藏成功!", true,attentionState);
             }
         }catch (Exception e){
             e.printStackTrace();
@@ -104,7 +105,7 @@ public class SysCommonCollectionApiController extends BaseController {
                 return commonResult;
             }
             collection.setUserId(patientByToken.getId());
-            List<DoctorCollecDto> doctorInfoList = commonCollectionService.selectByMyCollecDoctor(collection);
+            List<DoctorCollecDto> doctorInfoList = commonCollectionService.selectByMyCollecDoctor(getPageNum(),getPageSize(),collection);
             commonResult.setResult(ConstantsStatus.SC2000, "查询成功!", true,doctorInfoList);
 
         }catch (Exception e){

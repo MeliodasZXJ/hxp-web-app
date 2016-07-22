@@ -14,6 +14,8 @@ public class DocDoctorInfoTemp implements Serializable {
 
 	private Long docId;
 
+	private String mobile;
+
 	private String name;
 
 	private Integer sex;
@@ -58,6 +60,14 @@ public class DocDoctorInfoTemp implements Serializable {
 
 	public void setDocId(Long docId) {
 		this.docId = docId;
+	}
+
+	public String getMobile() {
+		return mobile;
+	}
+
+	public void setMobile(String mobile) {
+		this.mobile = mobile;
 	}
 
 	public String getName() {

@@ -19,9 +19,9 @@ public interface IDocDoctorTempInfoService {
 	
 	/**
 	 * 医生认证
-	 * @param docDoctorInfoTemp
+	 * @param docDoctorInfoTempDto
 	 */
-	public void updateAuth(DocDoctorInfoTemp docDoctorInfoTemp);
+	public void updateAuth(DocDoctorInfoTempDto docDoctorInfoTempDto) throws Exception;
 	
 	
 	/**

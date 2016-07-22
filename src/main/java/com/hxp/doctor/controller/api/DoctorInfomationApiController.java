@@ -1,5 +1,6 @@
 package com.hxp.doctor.controller.api;
 
+import com.hxp.doctor.dto.DoctorDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -148,16 +149,16 @@ public class DoctorInfomationApiController extends BaseController {
             }
 
             //得到医生信息,根据id,获取信息详情
-            DocDoctorInfo docDoctorInfo =  getDoctorByToken(token);
+            DoctorDto doctorDto = getDoctorByToken(token);
 
             //查询医生详细信息
 
 
             // 获取过后数据,转成String字符串
-            String json = JSONArray.toJSONString(docDoctorInfo);
+            //String json = JSONArray.toJSONString(docDoctorInfo);
 
 
-            commonResult.setResult(ConstantsStatus.SC2000, "获取专家言论详情成功", true, json);
+            commonResult.setResult(ConstantsStatus.SC2000, "获取专家言论详情成功", true, doctorDto);
 
         } catch (Exception e) {
             logger.error("获取专家言论详情出现异常！", e.fillInStackTrace());

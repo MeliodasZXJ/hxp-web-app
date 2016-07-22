@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hxp.commonality.po.CommonBanner">
+	<resultMap id="BaseResultMap" type="com.hxp.commonality.po.CommonBanner">
+		<id column="id" property="id" jdbcType="BIGINT" />
+		<result column="state" property="state" jdbcType="INTEGER" />
+		<result column="brand_type" property="brandType" jdbcType="INTEGER" />
+		<result column="adUuid" property="aduuid" jdbcType="VARCHAR" />
+		<result column="sort" property="sort" jdbcType="INTEGER" />
+		<result column="url" property="url" jdbcType="VARCHAR" />
+		<result column="image_url" property="imageUrl" jdbcType="VARCHAR" />
+		<result column="image_note" property="imageNote" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, state, brand_type, adUuid, sort, url, image_url, image_note
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Long">
+		select
+		<include refid="Base_Column_List" />
+		from common_banner
+		where id = #{id,jdbcType=BIGINT}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+		delete from common_banner
+		where id = #{id,jdbcType=BIGINT}
+	</delete>
+	<insert id="insert" parameterType="com.hxp.commonality.po.CommonBanner">
+		insert into common_banner (id, state, brand_type,
+		adUuid, sort, url,
+		image_url, image_note)
+		values (#{id,jdbcType=BIGINT}, #{state,jdbcType=INTEGER},
+		#{brandType,jdbcType=INTEGER},
+		#{aduuid,jdbcType=VARCHAR}, #{sort,jdbcType=INTEGER}, #{url,jdbcType=VARCHAR},
+		#{imageUrl,jdbcType=VARCHAR}, #{imageNote,jdbcType=VARCHAR})
+	</insert>
+
+	<update id="updateByPrimaryKeySelective" parameterType="com.hxp.commonality.po.CommonBanner">
+		update common_banner
+		<set>
+			<if test="state != null">
+				state = #{state,jdbcType=INTEGER},
+			</if>
+			<if test="brandType != null">
+				brand_type = #{brandType,jdbcType=INTEGER},
+			</if>
+			<if test="aduuid != null">
+				adUuid = #{aduuid,jdbcType=VARCHAR},
+			</if>
+			<if test="sort != null">
+				sort = #{sort,jdbcType=INTEGER},
+			</if>
+			<if test="url != null">
+				url = #{url,jdbcType=VARCHAR},
+			</if>
+			<if test="imageUrl != null">
+				image_url = #{imageUrl,jdbcType=VARCHAR},
+			</if>
+			<if test="imageNote != null">
+				image_note = #{imageNote,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where id = #{id,jdbcType=BIGINT}
+	</update>
+
+	<select id="getBannerListByBrandType" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from common_banner t
+		where t.`state`=1
+		AND  t.brand_type=#{brandType}
+	</select>
+	
+
+
+</mapper>

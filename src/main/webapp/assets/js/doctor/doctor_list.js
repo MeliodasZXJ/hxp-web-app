@@ -1,9 +1,48 @@
 /**
  * 材料列表
  */
+var pageIndex ;
 $(function() {
 	loadDocList();
+	$("#docDoctorInfo").validate(
+		{
+			rules : {
+				'replyContent' : {
+					required:true
+				}
+			},
+			submitHandler : function(form) {
+				var options = {
+					url : "authDoctor",
+					type : "post",
+					dataType : "json",
+					success : function(data) {
+						if (data.success) {
+							$.success('操作成功',function() {
+								layer.close(pageIndex);
+								search();
+							});
+						} else {
+							$.error(data.msg);
+						}
+					},
+					error : function(XMLHttpRequest, textStatus,
+									 errorThrown) {
+						$.warn('服务忙,请稍后再试.');
+					}
+				};
+				$(form).ajaxSubmit(options);
+			},
+			invalidHandler : function(form, validator) {
+
+				return false;
+			}
+
+		});
+
 })
+
+
 
 function processData(value) {
 	return eval(value);
@@ -21,9 +60,10 @@ function loadDocList() {
 		pagination : true,
 		sidePagination : "server",
 		pageNumber : 1,
-		pageSize : 5,
-		pageList : [ 5, 10, 20 ],
+		pageSize : 10,
+		pageList : [ 10, 20, 30 ],
 		queryParamsType : "limit",
+		queryParams:queryParams,
 		contentType : "application/x-www-form-urlencoded",
 		columns : [ {
 			field : 'id',
@@ -34,6 +74,11 @@ function loadDocList() {
 			align : 'center',
 			width : '5%',
 			formatter : serilNumFormatter
+		}, {
+			field : 'mobile',
+			title : '手机号',
+			align : 'center',
+			width : '10%'
 		}, {
 			field : 'name',
 			title : '姓名',
@@ -65,14 +110,21 @@ function loadDocList() {
 			align : 'center',
 			width : '10%'
 		}, {
+			field : 'mark',
+			title : '备注',
+			align : 'center',
+			width : '10%'
+		}, {
+			field : 'status',
+			visible : false
+		}, {
 			field : 'docId',
-			visible : true,
 			visible : false
 		}, {
-			field : 'pageNum',
+			field : 'headPath',
 			visible : false
 		}, {
-			field : 'pageSize',
+			field : 'pidPath',
 			visible : false
 		}, {
 			title : '操作',
@@ -86,69 +138,79 @@ function loadDocList() {
 }
 
 function search() {
-
+	
 	$('#doctorListTable').bootstrapTable('refresh', {
 		query : {
+			mobile : $("input[name='mobile']").val(),
 			name : $("input[name='name']").val(),
 			hospitalName : $("input[name='hospitalName']").val(),
-			deptName : $("input[name='deptName']").val()
+			deptId : $("select[name='deptId']").val(),
+			status:$("select[name='status']").val(),
+			 limit:10,
+			 offset:0
 		}
-	});
+	} );
 
-}
-function operateFormatter(value, row, index) {
-	return [
-			'<a class="edit"  href="javascript:void(0)" onClick="searchImg('
-					+ row.id + ')" title="查看图片">',
-			'<i class="glyphicon glyphicon-search">查看图片</i>',
-			'</a>    ',
-			'<a class="ok" href="javascript:void(0)" onClick="auth('
-					+ row.id +',3)" title="认证通过">',
-			'<i class="glyphicon glyphicon-ok-circle">认证通过</i>',
-			'</a>',
-			'<a class="remove" href="javascript:void(0)" onClick="auth('
-			+ row.id+ ',2)" title="认证不通过">',
-			'<i class="glyphicon glyphicon-remove-circle">认证不通过</i>', '</a>    ', ]
-			.join('');
+	
 }
 
-function auth(id,status) {
-	var confirmMessage="";
-	if(status==1){
-		confirmMessage="确定认证通过么?";
-	}else{
-		confirmMessage="确定认证不通过么?";
+function queryParams(params) {
+	 
+	return {
+		mobile : $("input[name='mobile']").val(),
+		name : $("input[name='name']").val(),
+		hospitalName : $("input[name='hospitalName']").val(),
+		status : $("select[name='status']").val(),
+		deptId : $("select[name='deptId']").val(),
+		limit:params.limit,
+		offset:params.offset
 	}
-	layer.confirm(confirmMessage, {
-		btn : [ '确定', '取消' ]
-	}, function() {
-		$.getJSON("authDoctor", { 
-			id : id,
-			status:status
-		}, function(data) {
-			if (data.success) {
-				$.success("操作成功", function() {
-					search();
-				});
-			} else {
-				$.error(data.msg);
-			}
+}
+	
+function operateFormatter(value, row, index) {
 
-		});
-	}, function() {
-		$.warn("您取消了操作");
+	var common = '<a class="edit"  href="javascript:void(0)" onClick="searchImg('
+			+ index
+			+ ')" title="查看图片">'
+			+ '<i class="glyphicon glyphicon-search">查看图片</i></a>';
+	var auth = '<a class="edit"  href="javascript:void(0)" onClick="reply('+index+')" title="立即处理">立即处理</a>';
+
+
+	if (row.status == 2 || row.status == 3) {
+		return common + auth;
+	}
+	return common;
+}
+
+function reply(index){
+	var data = $('#doctorListTable').bootstrapTable('getData');
+	$("#handleMobile").val(data[index].mobile);
+	$("#handleId").val(data[index].id);
+	$("#mark").val(data[index].mark);
+	$("#replyContentWrite").css("display","");
+	
+	//$("#replyContentRead").css("display","");
+	$("#btnStatus").css("display","");
+	pageIndex = layer.open({
+		type : 1,
+		title : '认证处理',
+		shadeClose : true,
+		shade : 0.5,
+		area : [ '800px', '600px' ],
+		content : $('#handleRZ')
 	});
 }
 
-function  searchImg(index){
+function searchImg(index) {
 	var data = $('#doctorListTable').bootstrapTable('getData');
-	$("#handleMobile").html(data[index].mobile);
+	$("#handleHeadPath").attr("src", data[index].headPath);
+	$("#handlePidPath").attr("src", data[index].pidPath);
 	pageIndex = layer.open({
 		type : 1,
 		title : '查看证件',
 		shadeClose : true,
 		shade : 0.5,
-		area : [ '800px', '600px' ],
+		area : [ '300px', '300px' ],
 		content : $('#handleImg')
 	});
 }

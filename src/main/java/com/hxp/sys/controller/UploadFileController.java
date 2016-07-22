@@ -51,13 +51,12 @@ public class UploadFileController extends BaseController {
 
             boolean flag = false;
 			if(!StringUtil.isBlank(thumbnail)){
-				if(thumbnail.equals("true") || thumbnail.equals("flase")){
+				if(thumbnail.equals("true") || thumbnail.equals("false")){
 					flag = Boolean.valueOf(thumbnail);
 				}else{
 					commonResult.setResult(ConstantsStatus.SC5001, "thumbnail传数不正确!", false);
 					return commonResult;
 				}
-				
 			}
 			
 			UploadImgResponse uploadImgResponse = uploadFileService.updateForUpload(flag, files);

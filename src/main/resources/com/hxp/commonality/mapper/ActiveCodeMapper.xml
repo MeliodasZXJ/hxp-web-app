@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hxp.commonality.po.ActiveCode">
+	<resultMap id="BaseResultMap" type="com.hxp.commonality.po.ActiveCode">
+		<id column="code" property="code" jdbcType="VARCHAR" />
+		<result column="usr" property="usr" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		code, usr
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from active_code
+		where code = #{code,jdbcType=VARCHAR}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		delete from active_code
+		where code = #{code,jdbcType=VARCHAR}
+	</delete>
+	<insert id="insert" parameterType="com.hxp.commonality.po.ActiveCode">
+		insert into active_code (code, usr)
+		values (#{code,jdbcType=VARCHAR}, #{usr,jdbcType=VARCHAR})
+	</insert>
+
+	<update id="updateByPrimaryKeySelective" parameterType="com.hxp.commonality.po.ActiveCode">
+		update active_code
+		<set>
+			<if test="usr != null">
+				usr = #{usr,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where code = #{code,jdbcType=VARCHAR}
+	</update>
+</mapper>

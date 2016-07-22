@@ -3,6 +3,8 @@ package com.hxp.patient.po;
 import java.io.Serializable;
 import java.util.Date;
 
+import com.alibaba.fastjson.annotation.JSONField;
+
 public class PatientCustomer implements Serializable {
     private static final long serialVersionUID = 6029574362547954101L;
     private Long id;
@@ -23,6 +25,8 @@ public class PatientCustomer implements Serializable {
 
     private Date birthday;
 
+    private String patientBirthday;
+
     private String headPath;
 
     private Date updateTime;
@@ -30,6 +34,24 @@ public class PatientCustomer implements Serializable {
     private Integer state;
 
     private Date createTime;
+
+    private Integer age;
+
+    public Integer getAge() {
+        return age;
+    }
+
+    public void setAge(Integer age) {
+        this.age = age;
+    }
+
+    public String getPatientBirthday() {
+        return patientBirthday;
+    }
+
+    public void setPatientBirthday(String patientBirthday) {
+        this.patientBirthday = patientBirthday;
+    }
 
     public Long getId() {
         return id;

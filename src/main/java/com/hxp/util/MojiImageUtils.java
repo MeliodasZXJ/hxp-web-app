@@ -100,7 +100,7 @@ private static Logger log = LoggerFactory.getLogger(MojiImageUtils.class);
 						if (!"jpg".equals(fileExtName)
 								&& !"jpeg".equals(fileExtName)) {
 							fileExtName = ".jpg";
-						}
+						}					
 
 						if (!fileExtName.startsWith(".")) {
 							fileExtName = "." + fileExtName;

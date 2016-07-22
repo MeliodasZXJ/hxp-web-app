@@ -17,12 +17,12 @@
 <!--[if lt IE 8]>
     <meta http-equiv="refresh" content="0;ie.html" />
     <![endif]-->
-
-<link rel="shortcut icon" href="assets/img/favicon.ico">
-<link href="assets/css/bootstrap.min.css?v=3.3.5" rel="stylesheet">
-<link href="assets/css/font-awesome.min.css?v=4.4.0" rel="stylesheet">
-<link href="assets/css/animate.min.css" rel="stylesheet">
-<link href="assets/css/style.min.css?v=4.0.0" rel="stylesheet">
+<%@ include file="../include/taglib.jsp"%>
+<link rel="shortcut icon" href="${ctx}/assets/img/favicon.ico">
+<link href="${ctx}/assets/css/bootstrap.min.css?v=3.3.5" rel="stylesheet">
+<link href="${ctx}/assets/css/font-awesome.min.css?v=4.4.0" rel="stylesheet">
+<link href="${ctx}/assets/css/animate.min.css" rel="stylesheet">
+<link href="${ctx}/assets/css/style.min.css?v=4.0.0" rel="stylesheet">
 </head>
 <body class="fixed-sidebar full-height-layout gray-bg"
 	style="overflow: hidden">
@@ -37,33 +37,44 @@
 				<li class="nav-header">
 					<div class="dropdown profile-element">
 						<span><img alt="" class="img-circle" style="width: 64px;height: 64px;"
-							src="assets/img/a7.jpg" /></span>
+							src="${ctx}/assets/img/a7.jpg" /></span>
 							<span class="clear">
 								<span class="block m-t-xs"><strong class="font-bold">好心情</strong></span>
-								<span class="text-muted text-xs block">超级管理员</span>
+								<span class="text-muted text-xs block">${hxp_login_user.accountName}</span>
 							</span>
 						
 					</div>
 					<div class="logo-element">好心情</div>
 				</li>
 				<li>
-					<a href="#"><i class="fa fa-home"></i><span class="nav-label">业务管理</span><span class="fa arrow"></span></a>
+					<a href="#"><i class="fa fa-home"></i><span class="nav-label">认证管理</span><span class="fa arrow"></span></a>
 					<ul class="nav nav-second-level">
-						<li><a class="J_menuItem" href="income/toGeneral.htm">医院信息</a></li>
-						<li><a class="J_menuItem" href="admin/doctor/getDoctorList">医生注册认证</a></li>
-						<li><a class="J_menuItem" href="admin/doctor/temp/getDocTempList">医生修改认证</a></li>
-						<li><a class="J_menuItem" href="admin/common/feedBack/getDoctorFeedBackList">医生反馈管理</a></li>
-						<li><a class="J_menuItem" href="admin/common/feedBack/getPatientFeedBackList">患者反馈管理</a></li>
-					</ul></li>
+						<li><a class="J_menuItem" href="${ctx}/admin/doctor/getDoctorList">医生注册认证</a></li>
+						<li><a class="J_menuItem" href="${ctx}/admin/doctor/temp/getDocTempList">医生修改认证</a></li>
+					</ul>
+				</li>
 					
-					<li><a href="#"><i class="fa fa-cutlery"></i> <span
-						class="nav-label">系统管理</span><span class="fa arrow"></span></a>
+				<li>
+					<a href="#"><i class="fa fa-cutlery"></i> <span class="nav-label">基础信息管理</span><span class="fa arrow"></span></a>
 					<ul class="nav nav-second-level">
-						<li><a class="J_menuItem" href="dic/index.htm">字典管理</a></li>
-<!-- 						<li><a class="J_menuItem" href="form_builder.html">权限管理</a></li> -->
-<!-- 						<li><a class="J_menuItem" href="form_builder.html">系统设置</a></li> -->
-					</ul></li>
+						<li><a class="J_menuItem" href="${ctx}/admin/general/getGeneralInfo" data-index="0">概况</a></li>
+						<li><a class="J_menuItem" href="${ctx}/admin/doctor/hospital/getHospitalList">医院信息</a></li>
+					</ul>
+				</li>
 					
+				<li>
+					<a href="#"><i class="fa fa-cutlery"></i> <span class="nav-label">反馈管理</span><span class="fa arrow"></span></a>
+					<ul class="nav nav-second-level">
+						<li><a class="J_menuItem" href="${ctx}/admin/common/feedBack/getDoctorFeedBackList">医生反馈管理</a></li>
+						<li><a class="J_menuItem" href="${ctx}/admin/common/feedBack/getPatientFeedBackList">患者反馈管理</a></li>
+					</ul>
+				</li>
+				<li>
+					<a href="#"><i class="fa fa-cutlery"></i> <span class="nav-label">文章</span><span class="fa arrow"></span></a>
+					<ul class="nav nav-second-level">
+						<li><a class="J_menuItem" href="${ctx}/app/service/common/article/getCommonInfomationList">文章管理</a></li>
+					</ul>
+				</li>
 					
 						
 				<%-- 	<c:forEach items="${menuList}" var="menu">
@@ -106,7 +117,7 @@
 							<li class="m-t-xs">
 								<div class="dropdown-messages-box">
 									<a href="profile.html" class="pull-left"> <img alt="image"
-										class="img-circle" src="assets/img/a7.jpg">
+										class="img-circle" src="${ctx}/assets/img/a7.jpg">
 									</a>
 									<div class="media-body">
 										<small class="pull-right">46小时前</small> <strong>小四</strong>
@@ -119,7 +130,7 @@
 							<li>
 								<div class="dropdown-messages-box">
 									<a href="profile.html" class="pull-left"> <img alt="image"
-										class="img-circle" src="assets/img/a4.jpg">
+										class="img-circle" src="${ctx}/assets/img/a4.jpg">
 									</a>
 									<div class="media-body ">
 										<small class="pull-right text-navy">25小时前</small> <strong>国民岳父</strong>
@@ -177,7 +188,7 @@
 				<nav class="page-tabs J_menuTabs">
 				<div class="page-tabs-content">
 					<a href="javascript:;" class="active J_menuTab"
-						data-id="income/toGeneral.htm">首页</a>
+						data-id="${ctx}/admin/general/getGeneralInfo">首页</a>
 				</div>
 				</nav>
 				<button class="roll-nav roll-right J_tabRight">
@@ -200,7 +211,7 @@
 			</div>
 			<div class="row J_mainContent" id="content-main">
 				<iframe class="J_iframe" name="iframe0" width="100%" height="100%"
-					src="income/toGeneral.htm" frameborder="0" data-id="index_v1.html"
+					src="${ctx}/admin/general/getGeneralInfo" frameborder="0" data-id="${ctx}/admin/general/getGeneralInfo"
 					seamless></iframe>
 			</div>
 			<div class="footer">
@@ -311,7 +322,7 @@
 								<a href="#">
 									<div class="pull-left text-center">
 										<img alt="image" class="img-circle message-avatar"
-											src="assets/img/a1.jpg">
+											src="${ctx}/assets/img/a1.jpg">
 
 										<div class="m-t-xs">
 											<i class="fa fa-star text-warning"></i> <i
@@ -329,7 +340,7 @@
 								<a href="#">
 									<div class="pull-left text-center">
 										<img alt="image" class="img-circle message-avatar"
-											src="assets/img/a2.jpg">
+											src="${ctx}/assets/img/a2.jpg">
 									</div>
 									<div class="media-body">
 										HCY48之音乐大魔王会员专属皮肤已上线，快来一键换装拥有他，宣告你对华晨宇的爱吧！ <br> <small
@@ -341,7 +352,7 @@
 								<a href="#">
 									<div class="pull-left text-center">
 										<img alt="image" class="img-circle message-avatar"
-											src="assets/img/a3.jpg">
+											src="${ctx}/assets/img/a3.jpg">
 
 										<div class="m-t-xs">
 											<i class="fa fa-star text-warning"></i> <i
@@ -358,7 +369,7 @@
 								<a href="#">
 									<div class="pull-left text-center">
 										<img alt="image" class="img-circle message-avatar"
-											src="assets/img/a4.jpg">
+											src="${ctx}/assets/img/a4.jpg">
 									</div>
 
 									<div class="media-body">
@@ -371,7 +382,7 @@
 								<a href="#">
 									<div class="pull-left text-center">
 										<img alt="image" class="img-circle message-avatar"
-											src="assets/img/a8.jpg">
+											src="${ctx}/assets/img/a8.jpg">
 									</div>
 									<div class="media-body">
 
@@ -384,7 +395,7 @@
 								<a href="#">
 									<div class="pull-left text-center">
 										<img alt="image" class="img-circle message-avatar"
-											src="assets/img/a7.jpg">
+											src="${ctx}/assets/img/a7.jpg">
 									</div>
 									<div class="media-body">
 										这哥们的新视频又来了，创意杠杠滴，帅炸了！ <br> <small class="text-muted">昨天
@@ -396,7 +407,7 @@
 								<a href="#">
 									<div class="pull-left text-center">
 										<img alt="image" class="img-circle message-avatar"
-											src="assets/img/a3.jpg">
+											src="${ctx}/assets/img/a3.jpg">
 
 										<div class="m-t-xs">
 											<i class="fa fa-star text-warning"></i> <i
@@ -414,7 +425,7 @@
 								<a href="#">
 									<div class="pull-left text-center">
 										<img alt="image" class="img-circle message-avatar"
-											src="assets/img/a4.jpg">
+											src="${ctx}/assets/img/a4.jpg">
 									</div>
 									<div class="media-body">
 										我发起了一个投票 【你认为下午大盘会翻红吗？】 <br> <small class="text-muted">星期一
@@ -434,13 +445,13 @@
 	</div>
 
 
-	<script src="assets/js/jquery.min.js?v=2.1.4"></script>
-	<script src="assets/js/bootstrap.min.js?v=3.3.5"></script>
-	<script src="assets/js/plugins/metisMenu/jquery.metisMenu.js"></script>
-	<script src="assets/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
-	<script src="assets/js/plugins/layer/layer.js"></script>
-	<script src="assets/js/hplus.min.js?v=4.0.0"></script>
-	<script src="assets/js/contabs.min.js"></script>
-	<script src="assets/js/plugins/pace/pace.min.js"></script>
+	<script src="${ctx}/assets/js/jquery.min.js?v=2.1.4"></script>
+	<script src="${ctx}/assets/js/bootstrap.min.js?v=3.3.5"></script>
+	<script src="${ctx}/assets/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+	<script src="${ctx}/assets/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+	<script src="${ctx}/assets/js/plugins/layer/layer.js"></script>
+	<script src="${ctx}/assets/js/hplus.min.js?v=4.0.0"></script>
+	<script src="${ctx}/assets/js/contabs.min.js"></script>
+	<script src="${ctx}/assets/js/plugins/pace/pace.min.js"></script>
 </body>
 </html>

@@ -48,6 +48,8 @@ public interface IPatientRecordService {
      * @return
      */
     PatientRecord getByPatientRecord(PatientRecord patientRecord);
+
+    PatientRecordDto getPatientRecord(PatientRecord patientRecord);
     
     
     /**
@@ -56,35 +58,31 @@ public interface IPatientRecordService {
      * @param patientRecord
      * @return
      */
-    List<PatientRecordDto> findNewPatientRecord(int pageNum, int pageSize,PatientRecord patientRecord);
+    List<PatientRecordDto> findNewPatientRecord(PatientRecord patientRecord);
 
     /**
      * 医生查询我的会诊
      *
-     * @param patientRecord
+     * @param
      * @return
      */
-    List<PatientRecordDto> findMyPatientRecord(int pageNum, int pageSize,long doctorId);
+    List<PatientRecordDto> findMyPatientRecord(long doctorId);
     
 
     /**
      * 查询提问表
-     * @param pageNum
-     * @param pageSize
      * @param patientRecord
      * @return
      */
-    List<PatientRecord> findPatientRecordList(int pageNum, int pageSize, PatientRecord patientRecord) ;
+    List<PatientRecord> findPatientRecordList(PatientRecord patientRecord) ;
     
     /**
      * 查询提问
-     * @param pageNum
-     * @param pageSize
      * @param doctorId    医生id
      * @param type		   1:查询最新提问,2查询我的会诊	
      * @return
      */
-    List<PatientRecord> findPatientRecordList(int pageNum,int pageSize,Long doctorId,int type);
+    List<PatientRecordDto> findPatientRecordList(Long doctorId,int type);
     
     
     /**
@@ -95,4 +93,15 @@ public interface IPatientRecordService {
      * @return
      */
     boolean patientRecordResponder(Long doctorId,Long patientId,String sessionId);
+
+
+
+
+
+    /**
+     * 获取问题详情
+     * @param sessionId
+     * @return
+     */
+   PatientRecordDto getPatientRecordById(String sessionId);
 }

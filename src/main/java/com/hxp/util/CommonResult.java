@@ -20,7 +20,7 @@ public class CommonResult<T> implements Serializable {
     private boolean returnStatus;
 
     public CommonResult() {
-        this(ConstantsStatus.SC4000,true);
+        this(ConstantsStatus.SC4000,true,"服务端错误");
     }
 
     public void setResult(Integer code, String message, boolean returnStatus, T value, int total) {
@@ -38,20 +38,21 @@ public class CommonResult<T> implements Serializable {
         this.returnStatus = returnStatus;
     }
 
+    public void setResult(String message, boolean returnStatus) {
+        this.message = message;
+        this.returnStatus = returnStatus;
+    }
+
     public void setResult(Integer code, String message, boolean returnStatus) {
         this.code = String.valueOf(code);
         this.message = message;
         this.returnStatus = returnStatus;
     }
 
-    public CommonResult(Integer code) {
-        this.code = String.valueOf(code);
-        this.returnStatus = true;
-    }
-
-    public CommonResult(Integer code,boolean returnStatus) {
+    public CommonResult(Integer code,boolean returnStatus,String message) {
         this.code = String.valueOf(code);
         this.returnStatus = returnStatus;
+        this.message = message;
     }
 
 

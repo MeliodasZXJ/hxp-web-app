@@ -503,6 +503,13 @@ public class DateUtil {
 		return flag;
 	}
 
-
+	/**
+	 * long类型转Date类型
+	 * @param lo
+	 * @return
+	 */
+	  public static Date long2Date(long lo){
+	       return new Date(lo);
+	  }
 
 }

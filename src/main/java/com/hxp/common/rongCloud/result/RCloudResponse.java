@@ -16,6 +16,7 @@ public class RCloudResponse implements Serializable {
     private String channelType;
     private String msgTimestamp;
     private String msgUID;
+    private String imgUrl;
 
     public String getFromUserId() {
         return fromUserId;
@@ -79,6 +80,14 @@ public class RCloudResponse implements Serializable {
 
     public void setMsgUID(String msgUID) {
         this.msgUID = msgUID;
+    }
+
+    public String getImgUrl() {
+        return imgUrl;
+    }
+
+    public void setImgUrl(String imgUrl) {
+        this.imgUrl = imgUrl;
     }
 
     @Override

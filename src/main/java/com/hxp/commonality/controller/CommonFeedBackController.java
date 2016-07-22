@@ -3,6 +3,7 @@ package com.hxp.commonality.controller;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -42,7 +43,7 @@ public class CommonFeedBackController extends BaseController {
 	 */
 	@RequestMapping("/getDoctorFeedBackListData")
 	public String getFeedBackListData(CommonFeedBack cfb, ModelMap model) {
-		PageHelper.startPage(cfb.getOffset(), cfb.getLimit());
+		PageHelper.offsetPage(cfb.getOffset(), cfb.getLimit());
 		List<CommonFeedBackDto> list = new ArrayList<>();
 		list = commonFeedBackService.findDoctorFeedBackList(cfb);
 		PageInfo page = new PageInfo(list);
@@ -69,7 +70,7 @@ public class CommonFeedBackController extends BaseController {
 	 */
 	@RequestMapping("/getPatientFeedBackListData")
 	public String getPatientFeedBackListData(CommonFeedBack cfb, ModelMap model) {
-		PageHelper.startPage(cfb.getOffset(), cfb.getLimit());
+		PageHelper.offsetPage(cfb.getOffset(), cfb.getLimit());
 		List<CommonFeedBack> list = new ArrayList<>();
 		list = commonFeedBackService.findPatientFeedBackList(cfb);
 		PageInfo page = new PageInfo(list);
@@ -84,7 +85,7 @@ public class CommonFeedBackController extends BaseController {
 	 */
 	@RequestMapping("/updateFeedBack")
 	@ResponseBody
-	public String update(CommonFeedBack cfb){
+	public Map<String,Object> update(CommonFeedBack cfb){
 		cfb.setReplyTime(new Date());
 		commonFeedBackService.update(cfb);
 		return successJson();

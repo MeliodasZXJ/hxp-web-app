@@ -26,16 +26,65 @@ public class SysVersionController  extends BaseController{
 			return  commonResult;
 		}
 		
+		//根据clientType 与 pfType 找到最新版本
 		SysVersion selectVersion = sysVersionService.selectVersion(sysVersion);
 		if(selectVersion==null){
 			commonResult.setResult(ConstantsStatus.SC6001, "系统找不到对应的相关版本信息", false);
 			return  commonResult;
 		}
-		if(sysVersion.getVersion().equals(selectVersion.getVersion())){
-			commonResult.setResult(ConstantsStatus.SC2000,"成功",true);
-			return  commonResult;
-		}
+		
+		
+		boolean forceUpdate =  getForceUpdate(selectVersion.getMinVersion(), sysVersion.getVersion());
+		
+		if(forceUpdate){
+			selectVersion.setForceUpdate(forceUpdate);
 			commonResult.setResult(ConstantsStatus.SC6002, "有新版本,请升级", true,selectVersion);
-		return commonResult;
+		}else{
+			commonResult.setResult(ConstantsStatus.SC2000,"成功",true);
+		}
+		return  commonResult;
+		
+	}
+	
+	/**
+	 * 比较两个版本
+	 * @param versionNew
+	 * @param versionOld
+	 * @return
+	 */
+	public static boolean getForceUpdate(String versionNew,String versionOld){
+		boolean flag = false;
+		
+		
+		versionNew = versionNew.replaceAll("\\.", "");
+		versionOld = versionOld.replaceAll("\\.", "");
+		
+		if(Integer.valueOf(versionNew) >= Integer.valueOf(versionOld)){
+			flag = true;
+		}
+		
+		return flag;
+		
+	/*	//用户传入的版本号与更新的最低版本号一样,就要强制更新
+		if(versionNew.equals(versionOld)){
+			flag = true;
+			return flag; 
+		}
+		
+		//否则将字符串截取成数组,进行比较
+		String[] verNewL = versionNew.split("\\.");
+		String[] verOldL = versionOld.split("\\.");
+		for (int i = 0; i < verOldL.length; i++) {
+			try {
+				if(Integer.valueOf(verOldL[i]) < Integer.valueOf(verNewL[i])){
+					flag = true;
+					break;
+				}
+			} catch (Exception e) {
+				flag = false;
+			}
+		}
+		
+		return flag;*/
 	}
 }

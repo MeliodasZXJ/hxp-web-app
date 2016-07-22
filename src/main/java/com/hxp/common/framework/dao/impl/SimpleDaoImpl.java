@@ -125,6 +125,15 @@ public abstract class SimpleDaoImpl<T> implements ISimpleDao<T> {
         return getSqlSessionTemplate().insert(getMapperMethod(mapperMethod), entityList);
     }
 
+    public int insert(String mapperMethod, Map<String,Object> objectMap){
+        return getSqlSessionTemplate().insert(getMapperMethod(mapperMethod), objectMap);
+    }
+
+    public <I> int insertObject(String mapperMethod,I params) {
+        return getSqlSessionTemplate().insert(mapperMethod,params);
+    }
+
+
 
     /***
      * 修改单个对象
@@ -154,6 +163,8 @@ public abstract class SimpleDaoImpl<T> implements ISimpleDao<T> {
     public int update(Map<String,Object> objectMap){
         return update(UPDATE,objectMap);
     }
+
+
 
     /***
      * 修改单个对象，自定义mappid

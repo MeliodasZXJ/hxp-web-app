@@ -9,7 +9,7 @@
     <title>登录-好心情移动医疗APP后台管理系统</title>
     <meta name="keywords" content="好心情移动医疗">
     <meta name="description" content="好心情移动医疗">
-
+<%-- 	<%@ include file="../include/taglib.jsp"%> --%>
     <link rel="shortcut icon" href="assets/img/favicon.ico">
     <link href="assets/css/bootstrap.min.css?v=3.3.5" rel="stylesheet">
     <link href="assets/css/font-awesome.min.css?v=4.4.0" rel="stylesheet">
@@ -31,7 +31,7 @@
             </div>
             <h3>好心情移动医疗APP后台管理系统</h3>
             <span style="color: red">${errMsg}</span>
-            <form class="m-t" role="form" id="loginForm" action="login.do" method="post">
+            <form class="m-t" role="form" id="loginForm" action="login" method="post">
                 <div class="form-group">
                     <input type="email" class="form-control" name="loginName" value="${loginName }" placeholder="用户名" required="" />
                 </div>
@@ -43,14 +43,14 @@
 					<img id="verifycode" style="width:25%;height:35px;  backgroud-color:white;float:right;cursor: pointer;" onclick="loadCode()"/>
                 </div>
                 <button type="submit" class="btn btn-primary block full-width m-b">登 录</button>
-                <p class="text-muted text-center"> <a href="toBackPwd.htm"><small>忘记密码了？</small></a> | <a href="register.htm">注册一个新账号</a>
+<!--                 <p class="text-muted text-center"> <a href="toBackPwd.htm"><small>忘记密码了？</small></a> | <a href="register.htm">注册一个新账号</a> -->
                 </p>
             </form>
         </div>
     </div>
     <script src="assets/js/jquery.min.js?v=2.1.4"></script>
     <script src="assets/js/bootstrap.min.js?v=3.3.5"></script>
-	<script type="text/javascript" src="assets/js/login.js"></script>
+	<script src="assets/js/login.js" type="text/javascript" ></script>
 </body>
 
 </html>

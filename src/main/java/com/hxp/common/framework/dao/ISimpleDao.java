@@ -21,6 +21,10 @@ public interface ISimpleDao<T> {
 
 	int insert(String mapperMethod,List<T> entityList);
 
+	int insert(String mapperMethod,Map<String,Object> map);
+
+	<I> int insertObject(String mapperMethod,I obj);
+
 	int update(T entity);
 
 
@@ -33,6 +37,7 @@ public interface ISimpleDao<T> {
 	int update(String mapperMethod,Map<String,Object> map);
 
 	int update(Map<String,Object> map);
+
 
 	<I> int bathUpdate(I id);
 

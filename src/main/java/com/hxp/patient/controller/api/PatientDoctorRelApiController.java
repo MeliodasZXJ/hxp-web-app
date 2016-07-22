@@ -1,21 +1,21 @@
 package com.hxp.patient.controller.api;
 
-import java.net.URLDecoder;
-import java.util.ArrayList;
-import java.util.List;
-
+import com.github.pagehelper.PageHelper;
+import com.hxp.base.BaseController;
+import com.hxp.patient.dto.PatientDcotorRelDto;
+import com.hxp.patient.po.PatientDoctorRel;
+import com.hxp.patient.service.IPatientDoctorRelService;
+import com.hxp.patient.vo.PatientDoctorRefVo;
+import com.hxp.util.CommonResult;
+import com.hxp.util.ConstantsStatus;
+import com.hxp.util.DateUtil;
+import com.hxp.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.hxp.base.BaseController;
-import com.hxp.patient.po.PatientDoctorRel;
-import com.hxp.patient.service.IPatientDoctorRelService;
-import com.hxp.util.CommonResult;
-import com.hxp.util.ConstantsStatus;
-import com.hxp.util.DateUtil;
-import com.hxp.util.StringUtil;
+import java.util.List;
 
 /**
  * Created by slyi on 2016/7/13.
@@ -26,7 +26,7 @@ public class PatientDoctorRelApiController extends BaseController {
 
     @Autowired
     private IPatientDoctorRelService patientDoctorRelService;
-
+    
 
     /**
      * 建立患者医生会话关系
@@ -96,7 +96,7 @@ public class PatientDoctorRelApiController extends BaseController {
      * @param patientId  患者ID
      * @return
      */
-    @RequestMapping(value = "/problemDoctor",method = RequestMethod.POST )
+    @RequestMapping(value = "/problemDoctor",method = RequestMethod.GET )
     public CommonResult<Object> problemDoctor(String token,String sessionId,String patientId) {
         CommonResult<Object> commonResult = new CommonResult<Object>();
         try {
@@ -125,9 +125,10 @@ public class PatientDoctorRelApiController extends BaseController {
             patientDoctorRel.setSessionId(sessionId);
             patientDoctorRel.setPatientId(Long.parseLong(patientId));
             
+            PageHelper.startPage(getPageNum(),getPageSize());
             //调用查询问题绑定医生
-            List<PatientDoctorRel> patientDoctorRelList= patientDoctorRelService.findPatientDoctorRelList(getPageNum(), getPageSize(), patientDoctorRel);
-            commonResult.setResult(ConstantsStatus.SC2000, "查询问题绑定医生成功！", true,patientDoctorRelList);
+            List<PatientDcotorRelDto> patientDoctorRelDtoList= patientDoctorRelService.findPatientDoctorRelDtoList(patientDoctorRel);
+            commonResult.setResult(ConstantsStatus.SC2000, "查询问题绑定医生成功！", true,patientDoctorRelDtoList);
         } catch (Exception e) {
             e.printStackTrace();
             logger.error("查询问题绑定医生失败！", e.fillInStackTrace());
@@ -139,14 +140,11 @@ public class PatientDoctorRelApiController extends BaseController {
     /**
      * 患者评论医生
      * @param token 登陆token
-     * @param sessionId 会话ID
-     * @param patientId  患者ID
-     * @param doctorIds  医生ID列表
-     * @param scores  得分列表
+     * @param patientDoctorRefVo
      * @return
      */
     @RequestMapping(value = "/evaluate",method = RequestMethod.POST )
-    public CommonResult<Object> evaluate(String token,String sessionId,String patientId,String[] doctorIds, String[] scores) {
+    public CommonResult<Object> evaluate(String token,PatientDoctorRefVo patientDoctorRefVo) {
         CommonResult<Object> commonResult = new CommonResult<Object>();
         try {
         	//判断token
@@ -158,62 +156,39 @@ public class PatientDoctorRelApiController extends BaseController {
             }
         	
             //sessionId判断
-            if (StringUtil.isBlank(sessionId)) {
+            if (StringUtil.isBlank(patientDoctorRefVo.getSessionId())) {
                 commonResult.setResult(ConstantsStatus.SC5023, "会话ID不能为空！", false);
                 return commonResult;
             }
 
             //patientId判断
-            if (StringUtil.isBlank(patientId)) {
+            if (StringUtil.isBlank(String.valueOf(patientDoctorRefVo.getPatientId()))) {
                 commonResult.setResult(ConstantsStatus.SC5024, "患者ID不能为空！", false);
                 return commonResult;
             }
 
             //医生ID为空判断
-            if(doctorIds==null)
-            {
+            if (StringUtil.isBlank(patientDoctorRefVo.getDoctorIds())) {
                 commonResult.setResult(ConstantsStatus.SC5021, "医生ID不能为空！", false);
                 return commonResult;
             }
 
-            //医生ID长度判断
-            if(doctorIds.length<3)
-            {
-                commonResult.setResult(ConstantsStatus.SC5021, "医生数量错误！", false);
-                return commonResult;
-            }
-
             //评分为空判断
-            if(scores==null)
-            {
+            if (StringUtil.isBlank(patientDoctorRefVo.getScores())) {
                 commonResult.setResult(ConstantsStatus.SC5022, "评分不能为空！", false);
                 return commonResult;
             }
 
-            //评分数量判断
-            if(scores.length<3)
-            {
-                commonResult.setResult(ConstantsStatus.SC5022, "评分数量错误！", false);
-                return commonResult;
-            }
-
-            List<PatientDoctorRel> patientDoctorRelList=new ArrayList<PatientDoctorRel>();
-            for(int i=0;i< doctorIds.length;i++)
-            {
-                String doctorId=doctorIds[i];
-                String score=scores[i];
-                String decodeScore= URLDecoder.decode(score,ENCODE);//解码
-
-                PatientDoctorRel patientDoctorRel=new PatientDoctorRel();
-                patientDoctorRel.setSessionId(sessionId);
-                patientDoctorRel.setPatientId(Long.parseLong(patientId));
-                patientDoctorRel.setDocId(Long.parseLong(doctorId));
-                patientDoctorRel.setAccess(decodeScore);//评价
-                patientDoctorRelList.add(patientDoctorRel);
-            }
             //添加评论内容
-            patientDoctorRelService.updatePatientDoctorRelList(patientDoctorRelList);
-            commonResult.setResult(ConstantsStatus.SC2000, "评论成功！", true,patientDoctorRelList);
+            int i=patientDoctorRelService.updatePatientDoctorRelList(patientDoctorRefVo);
+            if(i<0)
+            {
+                commonResult.setResult(ConstantsStatus.SC5022, "医生ID和评分数量不一致", false);
+                return commonResult;
+            }else if(i>0)
+            {
+                commonResult.setResult(ConstantsStatus.SC2000, "评论成功！", true);
+            }
         } catch (Exception e) {
             e.printStackTrace();
             logger.error("评论失败！", e.fillInStackTrace());
@@ -231,14 +206,14 @@ public class PatientDoctorRelApiController extends BaseController {
     public CommonResult<Object> patientDoctorRelList(PatientDoctorRel patientDoctorRef) {
         CommonResult<Object> commonResult = new CommonResult<Object>();
         try {
-            List<PatientDoctorRel> patientDoctorRelList=patientDoctorRelService.findPatientDoctorRelList(getPageNum(),getPageSize(),patientDoctorRef);
+        	PageHelper.startPage(getPageNum(),getPageSize());
+            List<PatientDoctorRel> patientDoctorRelList=patientDoctorRelService.findPatientDoctorRelList(patientDoctorRef);
             commonResult.setResult(ConstantsStatus.SC2000, "查询患者医生会话关系成功！", true,patientDoctorRelList);
         } catch (Exception e) {
             logger.error("查询患者医生会话关系失败！", e.fillInStackTrace());
         }
         return commonResult;
     }
-
-
+    
 
 }

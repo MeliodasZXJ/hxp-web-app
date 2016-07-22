@@ -27,27 +27,10 @@ public class DocDoctorHospitalInfoApiController extends BaseController {
      * 获取医院信息
      */
     @RequestMapping(value = "/hospitalInformation",method = RequestMethod.GET )
-    public CommonResult<Object> doctorAttestationStatus(String provinceId, String cityId, String regionId) {
+    public CommonResult<Object> doctorAttestationStatus(DocDoctorHospitalInfo docDoctorHospitalInfo) {
 
         CommonResult<Object> commonResult = new CommonResult<Object>();//返回通用格式数据
         try{
-        	
-        	DocDoctorHospitalInfo docDoctorHospitalInfo = new DocDoctorHospitalInfo();
-            //省id为空判断
-            if (!StringUtil.isBlank(provinceId)) {
-            	docDoctorHospitalInfo.setProvinceId(Integer.valueOf(provinceId));
-            }
-
-            //市id为空判断
-            if (!StringUtil.isBlank(cityId)) {
-            	docDoctorHospitalInfo.setCityId(Integer.valueOf(cityId));
-            }
-
-            //县id为空判断
-            if (!StringUtil.isBlank(regionId)) {
-            	docDoctorHospitalInfo.setRegionId(regionId);
-            }
-            
             //查询数据库中医院信息
             List<DocDoctorHospitalInfo> dbDocDoctorHospitalInfoList = iDocDoctorHospitalInfoService.findDocDoctorHospitalInfoList(docDoctorHospitalInfo);
             if(dbDocDoctorHospitalInfoList != null && dbDocDoctorHospitalInfoList.size() > 0){

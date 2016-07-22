@@ -1,19 +1,16 @@
 package com.hxp.doctor.controller.api;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.hxp.base.BaseController;
 import com.hxp.doctor.po.DocDepartmentInfo;
 import com.hxp.doctor.service.IDocDepartmentInfoService;
 import com.hxp.util.CommonResult;
 import com.hxp.util.ConstantsStatus;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 /**
  * Created by qinjingyu on 2016/7/15.

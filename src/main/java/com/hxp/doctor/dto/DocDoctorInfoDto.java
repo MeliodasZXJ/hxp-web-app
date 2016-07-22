@@ -2,10 +2,13 @@ package com.hxp.doctor.dto;
 
 import java.io.Serializable;
 
-public class DocDoctorInfoDto implements Serializable {
+import com.hxp.base.BaseBean;
+
+public class DocDoctorInfoDto extends BaseBean implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	private Long id;
+	private String mobile;
 	private String name;
 	private int sex;
 	private String intro;
@@ -16,15 +19,40 @@ public class DocDoctorInfoDto implements Serializable {
 	private String headPath;
 	private String pidPath;
 	private int type;
-	private Integer doctorType;     //名医风采
+	private Integer doctorType; // 名医风采
 	private String careers;
-	private int status;
+	private Integer status;
 	private String territory;
 	private String createTime;
-	private Integer pageSize = 10;
-	private Integer pageNum = 1;
+	private Integer autyType;
+	private Integer cityId;
+	private Integer provinceId;
+	private Integer regionId;
+	private Long collectId;
+	private Long patientId;   //患者id,患者登录后,通过这个id查询医生信息,判断是否登录
+
+	private Integer clinicalReception; //粉丝量
+
+	private Integer consult; //咨询量
+	private String mark; //备注
 
 	public DocDoctorInfoDto() {
+	}
+
+	public Integer getClinicalReception() {
+		return clinicalReception;
+	}
+
+	public void setClinicalReception(Integer clinicalReception) {
+		this.clinicalReception = clinicalReception;
+	}
+
+	public Integer getConsult() {
+		return consult;
+	}
+
+	public void setConsult(Integer consult) {
+		this.consult = consult;
 	}
 
 	public Long getId() {
@@ -33,6 +61,14 @@ public class DocDoctorInfoDto implements Serializable {
 
 	public void setId(Long id) {
 		this.id = id;
+	}
+
+	public String getMobile() {
+		return mobile;
+	}
+
+	public void setMobile(String mobile) {
+		this.mobile = mobile;
 	}
 
 	public String getName() {
@@ -131,11 +167,11 @@ public class DocDoctorInfoDto implements Serializable {
 		this.territory = territory;
 	}
 
-	public int getStatus() {
+	public Integer getStatus() {
 		return status;
 	}
 
-	public void setStatus(int status) {
+	public void setStatus(Integer status) {
 		this.status = status;
 	}
 
@@ -147,22 +183,6 @@ public class DocDoctorInfoDto implements Serializable {
 		this.createTime = createTime;
 	}
 
-	public Integer getPageSize() {
-		return pageSize;
-	}
-
-	public void setPageSize(Integer pageSize) {
-		this.pageSize = pageSize;
-	}
-
-	public Integer getPageNum() {
-		return pageNum;
-	}
-
-	public void setPageNum(Integer pageNum) {
-		this.pageNum = pageNum;
-	}
-
 	public Integer getDoctorType() {
 		return doctorType;
 	}
@@ -170,7 +190,60 @@ public class DocDoctorInfoDto implements Serializable {
 	public void setDoctorType(Integer doctorType) {
 		this.doctorType = doctorType;
 	}
-	
-	
 
+	public Integer getAutyType() {
+		return autyType;
+	}
+
+	public void setAutyType(Integer autyType) {
+		this.autyType = autyType;
+	}
+
+	public Integer getCityId() {
+		return cityId;
+	}
+
+	public void setCityId(Integer cityId) {
+		this.cityId = cityId;
+	}
+
+	public Integer getProvinceId() {
+		return provinceId;
+	}
+
+	public void setProvinceId(Integer provinceId) {
+		this.provinceId = provinceId;
+	}
+
+	public Integer getRegionId() {
+		return regionId;
+	}
+
+	public void setRegionId(Integer regionId) {
+		this.regionId = regionId;
+	}
+
+	public Long getCollectId() {
+		return collectId;
+	}
+
+	public void setCollectId(Long collectId) {
+		this.collectId = collectId;
+	}
+
+	public Long getPatientId() {
+		return patientId;
+	}
+
+	public void setPatientId(Long patientId) {
+		this.patientId = patientId;
+	}
+
+	public String getMark() {
+		return mark;
+	}
+
+	public void setMark(String mark) {
+		this.mark = mark;
+	}
 }

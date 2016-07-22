@@ -2,10 +2,13 @@ package com.hxp.doctor.dto;
 
 import java.io.Serializable;
 
-public class DocDoctorInfoTempDto implements Serializable {
+import com.hxp.base.BaseBean;
+
+public class DocDoctorInfoTempDto extends BaseBean implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	private Long id;
+	private String mobile;
 	private String name;
 	private Long docId;
 	private int sex;
@@ -21,8 +24,7 @@ public class DocDoctorInfoTempDto implements Serializable {
 	private int status;
 	private String territory;
 	private String createTime;
-	private Integer pageSize = 10;
-	private Integer pageNum = 1;
+	private String mark; //备注
 
 	public DocDoctorInfoTempDto() {
 	}
@@ -33,6 +35,14 @@ public class DocDoctorInfoTempDto implements Serializable {
 
 	public void setId(Long id) {
 		this.id = id;
+	}
+
+	public String getMobile() {
+		return mobile;
+	}
+
+	public void setMobile(String mobile) {
+		this.mobile = mobile;
 	}
 
 	public String getName() {
@@ -155,20 +165,11 @@ public class DocDoctorInfoTempDto implements Serializable {
 		this.createTime = createTime;
 	}
 
-	public Integer getPageSize() {
-		return pageSize;
+	public String getMark() {
+		return mark;
 	}
 
-	public void setPageSize(Integer pageSize) {
-		this.pageSize = pageSize;
+	public void setMark(String mark) {
+		this.mark = mark;
 	}
-
-	public Integer getPageNum() {
-		return pageNum;
-	}
-
-	public void setPageNum(Integer pageNum) {
-		this.pageNum = pageNum;
-	}
-
 }

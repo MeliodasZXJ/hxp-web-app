@@ -16,11 +16,11 @@ public interface IPatientRecordImgService {
     
     /**
      * 批量写入患者聊天图片
-     *
-     * @param patientRecordImgList
+     * @param sessionId
+     * @param imageIds
      * @return
      */
-    void insertPatientRecordImgList(List<PatientRecordImg> patientRecordImgList);
+    void insertPatientRecordImgList(String sessionId,String imageIds);
     
     
     /**

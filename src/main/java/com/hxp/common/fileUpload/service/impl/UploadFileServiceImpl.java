@@ -1,6 +1,8 @@
 package com.hxp.common.fileUpload.service.impl;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.net.URL;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,7 +13,9 @@ import com.hxp.common.fileUpload.po.UploadImg;
 import com.hxp.common.fileUpload.po.UploadImgResponse;
 import com.hxp.common.fileUpload.service.IUploadFileService;
 import com.hxp.common.fileUpload.service.IUploadImgService;
+import com.hxp.util.DownloadURLFile;
 import com.hxp.util.MojiImageUtils;
+import com.hxp.util.StringUtil;
 import com.hxp.util.UploadFileUtils;
 
 import fm.last.moji.spring.SpringMojiBean;
@@ -58,8 +62,9 @@ public class UploadFileServiceImpl implements IUploadFileService {
 	
 
 	public UploadImgResponse updateForUpload(boolean thumbnail, MultipartFile[] files) throws Exception {
-		if (files == null || files.length < 1)
+		if (files == null || files.length < 1){
 			return null;
+		}
 
 		String tmp = null;
 		StringBuffer sbf = null;
@@ -117,11 +122,74 @@ public class UploadFileServiceImpl implements IUploadFileService {
 			uploadImgService.insertUploadImg(uplpodImg);
 
 			// 生成返回信息
-			result.add(imgName, uploadResult[1], uploadThumbnail != null ? uploadThumbnail[1] : null);
+			result.add(uplpodImg.getId(), imgName, uploadResult[1], uploadThumbnail != null ? uploadThumbnail[1] : null);
 
 		}
 
 		return result;
 	}
+	
+	
+	public UploadImgResponse updateForUpload(boolean thumbnail,String url) throws Exception {
+		if (StringUtil.isEmpty(url)){
+			return null;
+		}
+
+		String tmp = null;
+		StringBuffer sbf = null;
+		UploadImg uplpodImg = null;
+
+		String[] uploadResult, uploadThumbnail = null;
+		UploadImgResponse result = new UploadImgResponse();
+		// 图片名称
+		String imgName = DownloadURLFile.getFileNameFromUrl(url);
+		
+		 
+		FileInputStream fileInput =  new FileInputStream(url);
+		
+		
+		// 上传文件系统
+		uploadResult = UploadFileUtils.uploadFileToServer(fileInput,imgName,moji);
+
+		// 图片url
+		uplpodImg.setImgUrl(uploadResult[1]);
+		// 图片后缀
+		uplpodImg.setSuffix(uploadResult[2]);
+
+
+		// 生成压缩图
+		if (thumbnail == true) {
+
+			tmp = MojiImageUtils.getCompressedImage(uploadResult[1], im4java_tempPath, "small", thumbnail_width,
+					thumbnail_height, false, "", "");
+
+			sbf = new StringBuffer(1000);
+			sbf.append(im4java_tempPath).append(tmp);
+			uploadThumbnail = UploadFileUtils.uploadFileToServer(sbf.toString(), moji);
+
+			sbf.delete(0, sbf.length());
+			sbf.append(uploadThumbnail[0]).append(".").append(uploadThumbnail[2]);
+
+			// 压缩图片id
+			uplpodImg.setThumbnaillId(sbf.toString());
+			// 压缩图片url
+			uplpodImg.setThumbnaillUrl(uploadThumbnail[1]);
+			// 图片后缀
+			uplpodImg.setSuffix(uploadResult[2]);
+
+		}
+		
+		//删除状态
+		uplpodImg.setFlag(0);
+
+		uploadImgService.insertUploadImg(uplpodImg);
+		
+		
+		// 生成返回信息
+		result.add(uplpodImg.getId(), imgName, uploadResult[1], uploadThumbnail != null ? uploadThumbnail[1] : null);
+
+		return result;
+	}
+	
 
 }

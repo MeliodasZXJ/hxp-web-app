@@ -12,8 +12,8 @@ public class UploadImgResponse {
 
     private List<FileMeta> files = Lists.newArrayList();
 
-    public void add(String name, String url, String thumbnail) {
-        files.add(new FileMeta( name, url, thumbnail));
+    public void add(Long id,String name, String url, String thumbnail) {
+        files.add(new FileMeta(id,name, url, thumbnail));
     }
 
     public void add(String name, String error) {
@@ -35,7 +35,7 @@ public class UploadImgResponse {
         /**
          * 文件记录id
          */
-        private String id;
+        private Long id;
         /**
          * 名称
          */
@@ -54,7 +54,8 @@ public class UploadImgResponse {
          */
         private String error;
 
-        public FileMeta( String name, String url, String thumbnailUrl) {
+        public FileMeta( Long id,String name, String url, String thumbnailUrl) {
+            this.id = id;
             this.name = name;
             this.url = url;
             this.thumbnailUrl = thumbnailUrl;
@@ -65,11 +66,11 @@ public class UploadImgResponse {
             this.error = error;
         }
 
-		public String getId() {
+		public Long getId() {
 			return id;
 		}
 
-		public void setId(String id) {
+		public void setId(Long id) {
 			this.id = id;
 		}
 

@@ -5,6 +5,7 @@ import java.util.List;
 import com.hxp.doctor.dto.DocDoctorInfoDto;
 import com.hxp.doctor.dto.DoctorDto;
 import com.hxp.doctor.po.DocDoctorInfo;
+import com.hxp.doctor.vo.DoctorVo;
 import com.hxp.patient.po.PatientCustomer;
 
 /**
@@ -44,11 +45,11 @@ public interface IDocDoctorInfoService {
 
     /***
      * 查询手机号是否存在
-     * @param docDoctorInfo
+     * @param mobile
      * @return
      * @throws Exception
      */
-    DocDoctorInfo getDocDoctorInfoByMobile(DocDoctorInfo docDoctorInfo)throws Exception;
+    DocDoctorInfo getDocDoctorInfoByMobile(String mobile)throws Exception;
 
     /***
      * 修改DocDoctorInfo
@@ -69,11 +70,21 @@ public interface IDocDoctorInfoService {
     
     /**
 	 * 获取所有医生
-	 * 查所有医生时, 
-	 * @param ddintd
+	 * 查所有医生时,
+     * doctorType不传值,查名医风采时,传doctorType=1
+	 * @param ddid
 	 * @return
 	 */
-	public List<DocDoctorInfoDto> getDoctorInfoList(DocDoctorInfoDto ddid);
+	List<DocDoctorInfoDto> getDoctorInfoList(DocDoctorInfoDto ddid);
+	
+	
+    /**
+	 * 患者端获取所有医生
+     * doctorType不传值,查名医风采时,传doctorType=1
+	 * @param ddid
+	 * @return
+	 */
+	List<DocDoctorInfoDto> getDoctorInfoByPatientList(DocDoctorInfoDto ddid);
 	
 	
 	int updateDoctor(DocDoctorInfo docDoctorInfo);
@@ -91,9 +102,23 @@ public interface IDocDoctorInfoService {
     DoctorDto getDoctorByMobileAndPass(DocDoctorInfo docDoctorInfo);
 
     /***
-     * 修改医生个人信息接口
-     * @param doctorDto
+     * 查找doctorDto对象
+     * @param dbDocDoctor
      * @return
      */
-    Integer updateDoctorInfo(DoctorDto doctorDto);
+    DoctorDto getDoctorByDoctorId(DoctorDto dbDocDoctor);
+
+    /***
+     * 修改医生个人信息接口
+     * @param doctorVo
+     * @return
+     */
+    Integer updateDoctorInfo(DoctorVo doctorVo);
+
+    /***
+     * 查询关注我的患者
+     * @param doctorId
+     * @return
+     */
+    List<PatientCustomer> selectCollectionPatient(Long doctorId);
 }

@@ -1,5 +1,7 @@
 package com.hxp.patient.service.impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -70,6 +72,17 @@ public class PatientCustomerServiceImpl implements IPatientCustomerService {
 	
 		return  patientCustomerDao.get("getByPatientMobile",mobile);
 	}
+
+	@Override
+	public List<PatientCustomer> getPatientCustomerList(PatientCustomer patientCustomer) {
+		// TODO Auto-generated method stub
+		return patientCustomerDao.find(patientCustomer);
+	}
+
+    @Override
+    public PatientCustomer selectByPatientById(Long id) {
+        return patientCustomerDao.get("selectByPatientById",id);
+    }
 
 
 }

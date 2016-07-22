@@ -21,7 +21,7 @@ public class SysRegionApiController extends BaseController {
 
 	@RequestMapping("/getAllProvince")
 	public CommonResult<Object> getAllProvince() {
-		CommonResult<Object> cr = new CommonResult<>(ConstantsStatus.SC2000);
+		CommonResult<Object> cr = new CommonResult<Object>();
 		List<SysRegion> list = sysRegionService.getAllProvince();
 		cr.setResult(ConstantsStatus.SC2000, "", true, list);
 		return cr;
@@ -29,7 +29,7 @@ public class SysRegionApiController extends BaseController {
 	
 	@RequestMapping("/getRegionByPid")
 	public CommonResult<Object> getRegionByPid(Long pid){
-		CommonResult<Object> cr = new CommonResult<>(ConstantsStatus.SC2000);
+		CommonResult<Object> cr = new CommonResult<Object>();
 		if(pid==null){
 			cr.setResult(ConstantsStatus.SC5001,"参数异常,请检查参数",false,null);
 			return cr ;

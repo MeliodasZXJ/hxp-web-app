@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hxp.sys.po.SysDic">
+	<resultMap id="BaseResultMap" type="com.hxp.sys.po.SysDic">
+		<id column="id" property="id" jdbcType="BIGINT" />
+		<result column="parentCode" property="parentcode" jdbcType="VARCHAR" />
+		<result column="code" property="code" jdbcType="VARCHAR" />
+		<result column="state" property="state" jdbcType="INTEGER" />
+		<result column="value" property="value" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, parentCode, code, state, value
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Long">
+		select
+		<include refid="Base_Column_List" />
+		from sys_dic
+		where id = #{id,jdbcType=BIGINT}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+		delete from sys_dic
+		where id = #{id,jdbcType=BIGINT}
+	</delete>
+	<insert id="insert" parameterType="com.hxp.sys.po.SysDic">
+		insert into sys_dic (id, parentCode, code,
+		state, value)
+		values (#{id,jdbcType=BIGINT}, #{parentcode,jdbcType=VARCHAR},
+		#{code,jdbcType=VARCHAR},
+		#{state,jdbcType=INTEGER}, #{value,jdbcType=VARCHAR})
+	</insert>
+
+	<update id="updateByPrimaryKeySelective" parameterType="com.hxp.sys.po.SysDic">
+		update sys_dic
+		<set>
+			<if test="parentcode != null">
+				parentCode = #{parentcode,jdbcType=VARCHAR},
+			</if>
+			<if test="code != null">
+				code = #{code,jdbcType=VARCHAR},
+			</if>
+			<if test="state != null">
+				state = #{state,jdbcType=INTEGER},
+			</if>
+			<if test="value != null">
+				value = #{value,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where id = #{id,jdbcType=BIGINT}
+	</update>
+
+	<select id="findDictByCode" parameterType="java.lang.String"
+		resultType="com.hxp.sys.po.SysDic">
+		SELECT
+		t.`id`,
+		t.`code`,
+		t.`parentCode`,
+		t.`state`,
+		t.`value`
+		FROM
+		`sys_dic` t
+		WHERE t.state !=-1 
+		and t.`parentCode` = #{code}
+	</select>
+	
+	<select id="findAllDictType"  resultType="com.hxp.sys.po.SysDic">
+		SELECT
+		t.`id`,
+		t.`code`,
+		t.`parentCode`,
+		t.`state`,
+		t.`value`
+		FROM
+		`sys_dic` t
+		WHERE t.state !=-1  
+		and t.`parentCode` is null
+	</select>
+
+</mapper>

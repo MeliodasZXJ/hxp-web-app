@@ -51,6 +51,8 @@ public class DocDoctorInfo implements Serializable {
     private Integer doctorType;
 
     private Integer sort;
+    
+    private String mark;
 
 
     public Long getId() {
@@ -220,4 +222,14 @@ public class DocDoctorInfo implements Serializable {
     public void setSort(Integer sort) {
         this.sort = sort;
     }
+
+	public String getMark() {
+		return mark;
+	}
+
+	public void setMark(String mark) {
+		this.mark = mark;
+	}
+    
+    
 }

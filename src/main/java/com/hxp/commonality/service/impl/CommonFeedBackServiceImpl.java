@@ -47,6 +47,12 @@ public class CommonFeedBackServiceImpl implements ICommonFeedBackService {
 		commonFeedBackDao.update("updateByPrimaryKeySelective",cfb);
 	}
 
+	@Override
+	public List<CommonFeedBack> findFeedBackList(CommonFeedBack cfb) {
+		// TODO Auto-generated method stub
+		return commonFeedBackDao.find("findFeedBackList",cfb);
+	}
+
 
 //	@Override
 //	public int insertSelective(CommonFeedBack record) {

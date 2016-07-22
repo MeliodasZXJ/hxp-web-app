@@ -23,4 +23,17 @@ public class DocDoctorHospitalInfoServiceImpl implements IDocDoctorHospitalInfoS
 		List<DocDoctorHospitalInfo> docDoctorHospitalInfoList = docDoctorHospitalInfoDao.find(docDoctorHospitalInfo);
         return docDoctorHospitalInfoList;
 	}
+
+	@Override
+	public void update(DocDoctorHospitalInfo docDoctorHospitalInfo) {
+		// TODO Auto-generated method stub
+		docDoctorHospitalInfoDao.update("updateByPrimaryKeySelective", docDoctorHospitalInfo);
+	}
+
+	@Override
+	public void insert(DocDoctorHospitalInfo docDoctorHospitalInfo) {
+		// TODO Auto-generated method stub
+		docDoctorHospitalInfoDao.insert(docDoctorHospitalInfo);
+		
+	}
 }

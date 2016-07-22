@@ -1,11 +1,12 @@
 package com.hxp.commonality.po;
 
-import java.io.Serializable;
-import java.util.Date;
-
 import com.alibaba.fastjson.annotation.JSONField;
 import com.hxp.base.BaseBean;
-import com.hxp.patient.po.SysUser;
+import com.hxp.sys.po.SysUser;
+
+
+import java.io.Serializable;
+import java.util.Date;
 
 public class CommonFeedBack extends BaseBean implements Serializable{
     private Long id;

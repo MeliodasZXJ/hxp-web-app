@@ -39,5 +39,8 @@ public interface ICommonFeedBackService {
 	 * @return
 	 */
 	public List<CommonFeedBackDto> findDoctorFeedBackList(CommonFeedBack cfb);
+	
+	
+	public List<CommonFeedBack> findFeedBackList(CommonFeedBack cfb);
 
 }

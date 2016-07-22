@@ -1,8 +1,13 @@
 package com.hxp.base;
 
+import com.alibaba.fastjson.annotation.JSONField;
+
 public class BaseBean {
+	@JSONField(serialize = false)
 	public Integer limit =10 ;
+	@JSONField(serialize = false)
 	public Integer offset =1 ;
+	@JSONField(serialize = false)
 	public String order ;
 	public Integer getLimit() {
 		return limit;

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hxp.commonality.po.ContentCategory">
+	<resultMap id="BaseResultMap" type="com.hxp.commonality.po.ContentCategory">
+		<id column="id" property="id" jdbcType="BIGINT" />
+		<result column="categoryName" property="categoryname" jdbcType="VARCHAR" />
+		<result column="parentId" property="parentid" jdbcType="VARCHAR" />
+		<result column="sort" property="sort" jdbcType="INTEGER" />
+		<result column="status" property="status" jdbcType="INTEGER" />
+		<result column="image" property="image" jdbcType="VARCHAR" />
+		<result column="uuid" property="uuid" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, categoryName, parentId, sort, status, image, uuid
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Long">
+		select
+		<include refid="Base_Column_List" />
+		from content_category
+		where id = #{id,jdbcType=BIGINT}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+		delete from content_category
+		where id = #{id,jdbcType=BIGINT}
+	</delete>
+	<insert id="insert" parameterType="com.hxp.commonality.po.ContentCategory">
+		insert into content_category (id, categoryName, parentId,
+		sort, status, image,
+		uuid)
+		values (#{id,jdbcType=BIGINT}, #{categoryname,jdbcType=VARCHAR},
+		#{parentid,jdbcType=VARCHAR},
+		#{sort,jdbcType=INTEGER}, #{status,jdbcType=INTEGER}, #{image,jdbcType=VARCHAR},
+		#{uuid,jdbcType=VARCHAR})
+	</insert>
+
+	<update id="updateByPrimaryKeySelective" parameterType="com.hxp.commonality.po.ContentCategory">
+		update content_category
+		<set>
+			<if test="categoryname != null">
+				categoryName = #{categoryname,jdbcType=VARCHAR},
+			</if>
+			<if test="parentid != null">
+				parentId = #{parentid,jdbcType=VARCHAR},
+			</if>
+			<if test="sort != null">
+				sort = #{sort,jdbcType=INTEGER},
+			</if>
+			<if test="status != null">
+				status = #{status,jdbcType=INTEGER},
+			</if>
+			<if test="image != null">
+				image = #{image,jdbcType=VARCHAR},
+			</if>
+			<if test="uuid != null">
+				uuid = #{uuid,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where id = #{id,jdbcType=BIGINT}
+	</update>
+
+</mapper>

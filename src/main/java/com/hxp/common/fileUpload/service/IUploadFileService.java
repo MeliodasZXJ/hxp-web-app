@@ -21,5 +21,15 @@ public interface IUploadFileService {
      * @throws Exception 
      */
     public UploadImgResponse updateForUpload(boolean thumbnail, MultipartFile[] files) throws Exception;
+    
+    
+    /**
+     * 保存上传图片
+     * @param thumbnail  是否生成缩略图
+     * @param url		  图片url
+     * @return
+     * @throws Exception
+     */
+    public UploadImgResponse updateForUpload(boolean thumbnail,String url) throws Exception;
 
 }

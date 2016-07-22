@@ -1,6 +1,7 @@
 package com.hxp.sys.po;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * Created by slyi on 2016/7/14.
@@ -9,19 +10,23 @@ public class RcloudChatLog implements Serializable {
     private static final long serialVersionUID = 8380228449046101175L;
     private Long id;
 
-    private Long fromuserid;
+    private String fromuserid;
 
-    private Long touserid;
+    private String touserid;
 
-    private Long objectname;
+    private String objectname;
 
     private String content;
 
-    private String timestamp;
+    private Date timestamp;
 
-    private Long channeltype;
+    private String channeltype;
 
     private String msguid;
+
+    private String imgUrl;
+
+    private Integer status;
 
     public Long getId() {
         return id;
@@ -31,27 +36,27 @@ public class RcloudChatLog implements Serializable {
         this.id = id;
     }
 
-    public Long getFromuserid() {
+    public String getFromuserid() {
         return fromuserid;
     }
 
-    public void setFromuserid(Long fromuserid) {
+    public void setFromuserid(String fromuserid) {
         this.fromuserid = fromuserid;
     }
 
-    public Long getTouserid() {
+    public String getTouserid() {
         return touserid;
     }
 
-    public void setTouserid(Long touserid) {
+    public void setTouserid(String touserid) {
         this.touserid = touserid;
     }
 
-    public Long getObjectname() {
+    public String getObjectname() {
         return objectname;
     }
 
-    public void setObjectname(Long objectname) {
+    public void setObjectname(String objectname) {
         this.objectname = objectname;
     }
 
@@ -63,19 +68,19 @@ public class RcloudChatLog implements Serializable {
         this.content = content;
     }
 
-    public String getTimestamp() {
+    public Date getTimestamp() {
         return timestamp;
     }
 
-    public void setTimestamp(String timestamp) {
+    public void setTimestamp(Date timestamp) {
         this.timestamp = timestamp;
     }
 
-    public Long getChanneltype() {
+    public String getChanneltype() {
         return channeltype;
     }
 
-    public void setChanneltype(Long channeltype) {
+    public void setChanneltype(String channeltype) {
         this.channeltype = channeltype;
     }
 
@@ -85,5 +90,21 @@ public class RcloudChatLog implements Serializable {
 
     public void setMsguid(String msguid) {
         this.msguid = msguid;
+    }
+
+    public String getImgUrl() {
+        return imgUrl;
+    }
+
+    public void setImgUrl(String imgUrl) {
+        this.imgUrl = imgUrl;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
     }
 }

@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hxp.commonality.po.CommonInfomation" >
+  <resultMap id="BaseResultMap" type="com.hxp.commonality.po.CommonInfomation" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="read_num" property="readNum" jdbcType="INTEGER" />
+    <result column="oper_id" property="operId" jdbcType="VARCHAR" />
+    <result column="content_type" property="contentType" jdbcType="INTEGER" />
+    <result column="iamge_url" property="iamgeUrl" jdbcType="VARCHAR" />
+    <result column="content_title" property="contentTitle" jdbcType="VARCHAR" />
+    <result column="illness_id" property="illnessId" jdbcType="INTEGER" />
+    <result column="introduction" property="introduction" jdbcType="VARCHAR" />
+    <result column="source" property="source" jdbcType="VARCHAR" />
+    <result column="author" property="author" jdbcType="VARCHAR" />
+    <result column="intro" property="intro" jdbcType="VARCHAR" />
+    <result column="from_type" property="fromType" jdbcType="VARCHAR" />
+    <result column="icon" property="icon" jdbcType="VARCHAR" />
+    <result column="target_url" property="targetUrl" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="uuid" property="uuid" jdbcType="VARCHAR" />
+    <result column="content_typeuuid" property="contentTypeuuid" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, read_num, oper_id, content_type, iamge_url, content_title, illness_id, introduction, 
+    source, author, intro, from_type, icon, target_url, status, create_time, uuid, content_typeuuid
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from common_infomation
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from common_infomation
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.hxp.commonality.po.CommonInfomation" >
+    insert into common_infomation (id, read_num, oper_id, 
+      content_type, iamge_url, content_title, 
+      illness_id, introduction, source, 
+      author, intro, from_type, 
+      icon, target_url, status, uuid, content_typeuuid
+      )
+    values (#{id,jdbcType=BIGINT}, #{readNum,jdbcType=INTEGER}, #{operId,jdbcType=VARCHAR}, 
+      #{contentType,jdbcType=INTEGER}, #{iamgeUrl,jdbcType=VARCHAR}, #{contentTitle,jdbcType=VARCHAR}, 
+      #{illnessId,jdbcType=INTEGER}, #{introduction,jdbcType=VARCHAR}, #{source,jdbcType=VARCHAR}, 
+      #{author,jdbcType=VARCHAR}, #{intro,jdbcType=VARCHAR}, #{fromType,jdbcType=VARCHAR}, 
+      #{icon,jdbcType=VARCHAR}, #{targetUrl,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, #{uuid,jdbcType=VARCHAR}, #{contentTypeuuid,jdbcType=VARCHAR}
+      )
+  </insert>
+  
+  <update id="updateByPrimaryKeySelective" parameterType="com.hxp.commonality.po.CommonInfomation" >
+    update common_infomation
+    <set >
+      <if test="readNum != null" >
+        read_num = #{readNum,jdbcType=INTEGER},
+      </if>
+      <if test="operId != null" >
+        oper_id = #{operId,jdbcType=VARCHAR},
+      </if>
+      <if test="contentType != null" >
+        content_type = #{contentType,jdbcType=INTEGER},
+      </if>
+      <if test="iamgeUrl != null" >
+        iamge_url = #{iamgeUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="contentTitle != null" >
+        content_title = #{contentTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="illnessId != null" >
+        illness_id = #{illnessId,jdbcType=INTEGER},
+      </if>
+      <if test="introduction != null" >
+        introduction = #{introduction,jdbcType=VARCHAR},
+      </if>
+      <if test="source != null" >
+        source = #{source,jdbcType=VARCHAR},
+      </if>
+      <if test="author != null" >
+        author = #{author,jdbcType=VARCHAR},
+      </if>
+      <if test="intro != null" >
+        intro = #{intro,jdbcType=VARCHAR},
+      </if>
+      <if test="fromType != null" >
+        from_type = #{fromType,jdbcType=VARCHAR},
+      </if>
+      <if test="icon != null" >
+        icon = #{icon,jdbcType=VARCHAR},
+      </if>
+      <if test="targetUrl != null" >
+        target_url = #{targetUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="uuid != null" >
+        uuid = #{uuid,jdbcType=VARCHAR},
+      </if>
+      <if test="contentTypeuuid != null" >
+        content_typeuuid = #{contentTypeuuid,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  
+   <select id="findArticleList" resultType="com.hxp.commonality.dto.ArticleInfoDto" parameterType="com.hxp.commonality.dto.ArticleInfoDto" >
+	SELECT
+	t.id,
+	t.`content_title` AS contentTitle,
+	IFNULL(SUM(c.id), 0) AS collectNum,
+	t.`create_time` createTime,
+	t.iamge_url imageUrl,
+	t.target_url targetUrl
+	FROM
+	`common_infomation` t
+	LEFT JOIN `common_collection` c
+	ON c.`obj_id` = t.`id`
+	AND c.`collect_type` = 0
+	WHERE t.`status` =1
+    <if test="illnessId != null" >
+		AND t.illness_id = #{illnessId}
+    </if>
+    <if test="contentTitle != null" >
+        AND t.content_title = #{contentTitle}
+    </if>
+     <if test="contentType != null" >
+        AND t.content_type =#{contentType}
+    </if>
+	GROUP BY t.id 
+	ORDER BY t.`create_time` DESC
+  </select>
+  
+   <select id="getArticleIsCollect" resultType="com.hxp.sys.po.CommonCollection" parameterType="com.hxp.sys.po.CommonCollection" >
+	SELECT 
+	  t.id
+	FROM
+	  `common_collection` t 
+	WHERE t.`collect_type` = 0 
+	  AND t.`user_id`=#{userId} 
+	  AND t.`obj_id` = #{objId}
+      AND t.`collect_rule` = #{collectRule} 
+  </select>
+  
+</mapper>

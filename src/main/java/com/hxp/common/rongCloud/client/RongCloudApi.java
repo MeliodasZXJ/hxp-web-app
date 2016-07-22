@@ -6,6 +6,9 @@ import com.hxp.common.rongCloud.models.GroupInfo;
 import com.hxp.common.rongCloud.models.Message;
 import com.hxp.common.rongCloud.result.RCloudSdkHttpResult;
 import com.hxp.common.rongCloud.utils.RongCloudHttpUtil;
+import org.apache.commons.configuration.Configuration;
+import org.apache.commons.configuration.ConfigurationException;
+import org.apache.commons.configuration.PropertiesConfiguration;
 
 import java.net.HttpURLConnection;
 import java.net.URLEncoder;
@@ -13,9 +16,24 @@ import java.util.List;
 
 public class RongCloudApi {
 
-	private static final String appKey = "8luwapkvuvnel";
-	private static final String appSecret = "282pC7bXOStHD";
-	private static String encode="UTF-8";
+	private static final String encode="UTF-8";
+	private static final String configfile = "rongCloud.properties";
+
+	private static Configuration config = null;
+	//融云appKey、appSecret
+	private static  String appKey=null;
+	private static  String appSecret =null;
+
+	static {
+		try {
+			config = new PropertiesConfiguration(configfile);
+			appKey=config.getString("appKey");
+			appSecret=config.getString("appSecret");
+		} catch (ConfigurationException e) {
+			e.printStackTrace();
+		}
+	}
+
 
 	/**
 	 * 获取token
